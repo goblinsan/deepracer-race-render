@@ -1,0 +1,6 @@
+- team: Storm
+  logfile: eval_logs_storm.json
+  car: 01
+- team: Artificial Racers
+  logfile: eval_logs_ar.json
+  car: 99

@@ -1,0 +1,4 @@
+- team: Storm
+  logfile: eval_logs_storm.json
+- team: Artificial Racers
+  logfile: eval_logs_ar.json

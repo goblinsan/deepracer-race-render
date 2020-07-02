@@ -15,7 +15,7 @@ def parse_message( message_text ):
         data_dict[headers[i]] = data[i]
 
     return data_dict
-
+ 
 def evaluate_and_sort( raw_log_data ):
 
     # Data conditioning

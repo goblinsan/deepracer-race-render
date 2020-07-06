@@ -27,13 +27,18 @@ filtered_by_eval = [x for x in rows if x[0] == expected_eval]
 print(len(filtered_by_eval))
 print(filtered_by_eval[0])
 
-
+pre_race_coords = [2.0399124787587044, 0.9838196013153698]
+pre_race_coords2 = [2.749912415761146, 0.9840310918882519]
 
 new_coords_list = []
+# append last place grid postion
+new_coords_list.append([-1, float(filtered_by_eval[0][3])] )
 for i in filtered_by_eval:
     x = float(i[2])
     y = float(i[3])
     new_coords_list.append([x , y])
+# append final position
+new_coords_list.append([30, 1])  
 print(new_coords_list[0])
 
 # make a new curve
@@ -44,7 +49,7 @@ crv.dimensions = '2D'
 spline = crv.splines.new(type='NURBS')
 
 # a spline point for each point
-spline.points.add(len(filtered_by_eval)-1) # theres already one point by default
+spline.points.add(len(filtered_by_eval) + 1) # extra points for pre and post race
 
 # assign the point coordinates to the spline points
 for p, new_co in zip(spline.points, new_coords_list):

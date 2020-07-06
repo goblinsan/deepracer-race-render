@@ -19,6 +19,8 @@ print(len(rows))
 print(rows[7])
 
 expected_eval = 6
+curve_name = "racer_" + str(expected_eval) + "_curve"
+print (curve_name)
 filtered_by_eval = [x for x in rows if x[0] == expected_eval]
 
 print(len(filtered_by_eval))
@@ -35,7 +37,7 @@ print(new_coords_list[0])
 
 # make a new curve
 crv = bpy.data.curves.new('crv', 'CURVE')
-crv.dimensions = '3D'
+crv.dimensions = '2D'
 
 # make a new spline in that curve
 spline = crv.splines.new(type='NURBS')
@@ -48,5 +50,19 @@ for p, new_co in zip(spline.points, new_coords_list):
     p.co = (new_co + [0] + [1.0]) # (add nurbs weight)
 
 # make a new object with the curve
-obj = bpy.data.objects.new('object_name', crv)
+obj = bpy.data.objects.new(curve_name, crv)
 bpy.context.scene.collection.objects.link(obj)
+
+bpy.ops.wm.append(directory="D:\\deepRacer\\deepRacer-race-render\\deepracer-race-render\\race_car.blend\\Collection\\", link=False, filename="race_car")bpy.ops.wm.append(directory="D:\\deepRacer\\deepRacer-race-render\\deepracer-race-render\\race_car.blend\\Collection\\", link=False, filename="race_car")
+
+objects = bpy.data.objects
+a = objects['racer_6_curve']
+b = objects['car10']
+
+bpy.ops.object.select_all(action='DESELECT') #deselect all object
+
+bpy.data.objects['racer_6_curve'].select_set(True)
+bpy.data.objects['car10'].select_set(True)
+
+bpy.context.view_layer.objects.active = a  
+bpy.ops.object.parent_set(type="FOLLOW")

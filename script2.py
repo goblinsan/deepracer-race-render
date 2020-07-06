@@ -1,5 +1,6 @@
 import json
 import bpy
+from bpy_extras.image_utils import load_image
 
 #aws logs filter-log-events --log-group-name /aws/deepracer/leaderboard/SimulationJobs --log-stream-name-prefix sim-mz0nm166n95y --start-time 1593459542045 --end-time 1593459695202 --filter-pattern "SIM_TRACE_LOG" --start-from-head true
 with open("D:/deepRacer/eval_logs.json") as f:
@@ -53,16 +54,33 @@ for p, new_co in zip(spline.points, new_coords_list):
 obj = bpy.data.objects.new(curve_name, crv)
 bpy.context.scene.collection.objects.link(obj)
 
-bpy.ops.wm.append(directory="D:\\deepRacer\\deepRacer-race-render\\deepracer-race-render\\race_car.blend\\Collection\\", link=False, filename="race_car")bpy.ops.wm.append(directory="D:\\deepRacer\\deepRacer-race-render\\deepracer-race-render\\race_car.blend\\Collection\\", link=False, filename="race_car")
+bpy.ops.wm.append(directory="D:\\deepRacer\\deepRacer-race-render\\deepracer-race-render\\race_car.blend\\Collection\\", link=False, filename="race_car")
 
 objects = bpy.data.objects
 a = objects['racer_6_curve']
-b = objects['car10']
+b = objects['car_base']
 
 bpy.ops.object.select_all(action='DESELECT') #deselect all object
 
 bpy.data.objects['racer_6_curve'].select_set(True)
-bpy.data.objects['car10'].select_set(True)
+bpy.data.objects['car_base'].select_set(True)
 
 bpy.context.view_layer.objects.active = a  
 bpy.ops.object.parent_set(type="FOLLOW")
+
+numberImage = load_image("D:\\deepRacer\\deepRacer-race-render\\deepracer-race-render\\Textures\\generated\\car_number-assets\\car_number_42.png")
+bpy.data.materials['car_material'].node_tree.nodes['car_number'].image = numberImage
+
+
+def srgb_to_linearrgb(c):
+    if   c < 0:       return 0
+    elif c < 0.04045: return c/12.92
+    else:             return ((c+0.055)/1.055)**2.4
+
+def hex_to_rgb(h,alpha=1):
+    r = (h & 0xff0000) >> 16
+    g = (h & 0x00ff00) >> 8
+    b = (h & 0x0000ff)
+    return tuple([srgb_to_linearrgb(c/0xff) for c in (r,g,b)] + [alpha])
+
+bpy.data.materials["car_material"].node_tree.nodes["car_color"].outputs[0].default_value = hex_to_rgb(0x336600)

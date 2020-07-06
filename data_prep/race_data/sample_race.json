@@ -44,7 +44,7 @@
     "starting_position": 4,
     "car_no": "13",
     "car_color": "660033",
-    "lap_end_state": "lap_complete",
+    "lap_end_state": "off_track",
     "lap_progress": 24.1810,
     "lap_time": 6,
     "plot_filepath": "coord_plots/sample_race/car_4.csv"

@@ -19,13 +19,13 @@ def getRaceCoords(race, car):
     car_csv_name = "car_" + str(car) + ".csv"
     csv_filepath = race_data_path + "/coord_plots/" + race + "/" + car_csv_name
     with open(csv_filepath) as csvfile:
-        return list(csv.reader(csvfile))
+        return list(csv.reader(csvfile, quoting=csv.QUOTE_NONNUMERIC))
 
 
-def generatePath(coords, racer_number):
+def generatePath(coords, racer_number, car_time):
     curve_name = "racer_" + str(racer_number) + "_curve"
     # make a new curve
-    crv = bpy.data.curves.new('crv', 'CURVE')
+    crv = bpy.data.curves.new('crv_' + str(racer_number), 'CURVE')
     crv.dimensions = '2D'
 
     # make a new spline in that curve
@@ -38,10 +38,13 @@ def generatePath(coords, racer_number):
         p.co = (new_co + [0] + [1.0])
 
     # make a new object with the curve
-    obj = bpy.data.objects.new(curve_name, crv)
-    bpy.context.scene.collection.objects.link(obj)
+    new_curve = bpy.data.objects.new(curve_name, crv)
+    bpy.context.scene.collection.objects.link(new_curve)
 
-    return obj
+    # update path duration
+    crv.path_duration = 24 * float(car_time)
+
+    return new_curve
 
 def srgb_to_linearrgb(c):
     if   c < 0:       return 0
@@ -56,30 +59,70 @@ def hex_to_rgb(h,alpha=1):
 
 
 def generateCar(iterString, car_number, car_color):
+    # add car to scene
     bpy.ops.wm.append(directory="D:\\deepRacer\\deepRacer-race-render\\deepracer-race-render\\race_car.blend\\Collection\\", link=False, filename="race_car")
+    # update number
     numberImage = load_image("D:\\deepRacer\\deepRacer-race-render\\deepracer-race-render\\Textures\\generated\\car_number-assets\\car_number_" + str(car_number) +".png")
     bpy.data.materials['car_material' + iterString].node_tree.nodes['car_number'].image = numberImage
+    # update color
+    bpy.data.materials['car_material' + iterString].node_tree.nodes['car_color'].outputs[0].default_value = hex_to_rgb(int(car_color, 16))
 
-    bpy.data.materials['car_material' + iterString].node_tree.nodes['car_color'].outputs[0].default_value = hex_to_rgb(car_color)
+
+def assignCarToPath(curve, iterString):
+    objects = bpy.data.objects
+    car_base = objects['car_base' + iterString]
+
+    bpy.ops.object.select_all(action='DESELECT')
+
+    curve.select_set(True)
+    car_base.select_set(True)
+
+    bpy.context.view_layer.objects.active = curve
+    bpy.ops.object.parent_set(type="FOLLOW")
+
+
+def moveCarToStartingPosition(team_position, curve):
+    max_move_x = 1.81986
+    incremental = max_move_x / len(fileData)
+    x_translate = incremental * team_position
+    y_translate = 0
+    if team_position % 2 != 0:
+        y_translate = 0.394784
+
+    current_x = curve.location[0]
+    current_y = curve.location[1]
+
+    curve.location[0] = current_x - x_translate
+    curve.location[1] = current_y - y_translate
+
+#bpy.ops.transform.translate(value=(-0, -0.394784, -0), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(False, True, False), mirror=True, use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1, use_proportional_connected=False, use_proportional_projected=False, release_confirm=True)
+#bpy.ops.transform.translate(value=(-1.81986, -0, -0), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(True, False, False), mirror=True, use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1, use_proportional_connected=False, use_proportional_projected=False, release_confirm=True)
 
 
 for i in fileData:
+    team_position = int(i['starting_position'])
     iterString = ''
-    if i > 0:
-        iterString = "." + str(i).zfill(3)
+    if team_position > 0:
+        iterString = "." + str(team_position).zfill(3)
     team_name = i['team']
-    team_position = i['starting_position']
     car_number = i['car_no']
     car_color = i['car_color']
+    car_time = i['lap_time']
     print("Rendering race data for " + team_name)
 
     print("Get coordinates plot for " + team_name)
     coords = getRaceCoords("sample_race", team_position)
 
     print("Generating Path for " + team_name)
-    curve = generatePath(coords, team_position)
+    curve = generatePath(coords, team_position, car_time)
 
     print("Generating Car for " + team_name)
     generateCar(iterString, car_number, car_color)
-    print("Set race car color for " + team_name)
-    print("Set race car number for " + team_name)
+
+    print("Assign car to follow path")
+    assignCarToPath(curve, iterString)
+
+    if team_position > 0:
+        print("Move car to starting position")
+        moveCarToStartingPosition(team_position, curve)
+

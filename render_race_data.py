@@ -44,7 +44,7 @@ def getAddedCoordsForStartingPosition(team_position, first_coord):
     coord_list.append([third_x, first_y])
     return coord_list
 
-def generatePath(coords, racer_number, car_time):
+def generatePath(coords, racer_number, total_frames):
     curve_name = "racer_" + str(racer_number) + "_curve"
     # make a new curve
     crv = bpy.data.curves.new('crv_' + str(racer_number), 'CURVE')
@@ -67,7 +67,7 @@ def generatePath(coords, racer_number, car_time):
     bpy.context.scene.collection.objects.link(new_curve)
 
     # update path duration
-    crv.path_duration = 24 * float(car_time)
+    crv.path_duration = total_frames
 
     return new_curve
 
@@ -106,10 +106,20 @@ def assignCarToPath(curve, iterString):
     bpy.ops.object.parent_set(type="FOLLOW")
 
 
+def addExplosion(iterString, total_frames):
+    explosion_frame = total_frames - 15
+    smoke_domain = bpy.data.objects['smoke_domain' + iterString]
+    smoke_domain.modifiers["Fluid"].domain_settings.cache_frame_start = explosion_frame
+    smoke_domain.modifiers["Fluid"].domain_settings.cache_frame_end = explosion_frame + 200
+    bpy.data.particles['flame' + iterString].frame_start = explosion_frame
+    bpy.data.particles['flame' + iterString].frame_end = explosion_frame + 1
+    bpy.data.particles['destroyCar' + iterString].frame_start = explosion_frame
+    bpy.data.particles['destroyCar' + iterString].frame_end = total_frames
+    bpy.data.particles['destroyCar' + iterString].lifetime = 200
 
-
-#bpy.ops.transform.translate(value=(-0, -0.394784, -0), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(False, True, False), mirror=True, use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1, use_proportional_connected=False, use_proportional_projected=False, release_confirm=True)
-#bpy.ops.transform.translate(value=(-1.81986, -0, -0), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(True, False, False), mirror=True, use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1, use_proportional_connected=False, use_proportional_projected=False, release_confirm=True)
+    smoke_domain.select_set(True)
+    bpy.context.view_layer.objects.active = smoke_domain
+    bpy.ops.fluid.bake_data()
 
 
 for i in fileData:
@@ -121,13 +131,15 @@ for i in fileData:
     car_number = i['car_no']
     car_color = i['car_color']
     car_time = i['lap_time']
+    crashed = i['lap_end_state']
+    total_frames = 24 * car_time
     print("Rendering race data for " + team_name)
 
     print("Get coordinates plot for " + team_name)
     coords = getRaceCoords("sample_race", team_position)
 
     print("Generating Path for " + team_name)
-    curve = generatePath(coords, team_position, car_time)
+    curve = generatePath(coords, team_position, total_frames)
 
     print("Generating Car for " + team_name)
     generateCar(iterString, car_number, car_color)
@@ -135,7 +147,7 @@ for i in fileData:
     print("Assign car to follow path")
     assignCarToPath(curve, iterString)
 
-    # if team_position > 0:
-    #     print("Move car to starting position")
-    #     moveCarToStartingPosition(team_position, curve)
+    print("Add explosion if car crashed")
+    if crashed == 'off_track':
+        addExplosion(iterString, total_frames)
 

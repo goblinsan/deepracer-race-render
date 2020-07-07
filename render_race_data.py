@@ -24,22 +24,24 @@ def getRaceCoords(race, car):
 def getAddedCoordsForStartingPosition(team_position, first_coord):
     max_move_x = 10
     incremental = max_move_x / len(fileData)
-    x_translate = incremental * team_position
+    x_translate = (incremental * team_position) + .3
     y_translate = 0
     if team_position % 2 != 0:
-        y_translate = .35
+        y_translate = .3
     else:
         y_translate = -.1
 
     current_x = first_coord[0]
     current_y = first_coord[1]
     first_x = current_x - x_translate
-    second_x = current_x - 0.1
+    second_x = current_x - 0.3
+    third_x = current_x - 0.1
     first_y = current_y - y_translate
 
     coord_list = []
     coord_list.append([first_x, first_y])
     coord_list.append([second_x, first_y])
+    coord_list.append([third_x, first_y])
     return coord_list
 
 def generatePath(coords, racer_number, car_time):

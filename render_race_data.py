@@ -21,6 +21,26 @@ def getRaceCoords(race, car):
     with open(csv_filepath) as csvfile:
         return list(csv.reader(csvfile, quoting=csv.QUOTE_NONNUMERIC))
 
+def getAddedCoordsForStartingPosition(team_position, first_coord):
+    max_move_x = 10
+    incremental = max_move_x / len(fileData)
+    x_translate = incremental * team_position
+    y_translate = 0
+    if team_position % 2 != 0:
+        y_translate = .35
+    else:
+        y_translate = -.1
+
+    current_x = first_coord[0]
+    current_y = first_coord[1]
+    first_x = current_x - x_translate
+    second_x = current_x - 0.1
+    first_y = current_y - y_translate
+
+    coord_list = []
+    coord_list.append([first_x, first_y])
+    coord_list.append([second_x, first_y])
+    return coord_list
 
 def generatePath(coords, racer_number, car_time):
     curve_name = "racer_" + str(racer_number) + "_curve"
@@ -28,13 +48,16 @@ def generatePath(coords, racer_number, car_time):
     crv = bpy.data.curves.new('crv_' + str(racer_number), 'CURVE')
     crv.dimensions = '2D'
 
+    starting_coords = getAddedCoordsForStartingPosition(racer_number, coords[0])
+    updated_coords = starting_coords + coords
+
     # make a new spline in that curve
     spline = crv.splines.new(type='NURBS')
     # a spline point for each point - already contains 1 point
-    spline.points.add(len(coords) - 1)
+    spline.points.add(len(updated_coords) - 1)
 
     # assign the point coordinates to the spline points
-    for p, new_co in zip(spline.points, coords):
+    for p, new_co in zip(spline.points, updated_coords):
         p.co = (new_co + [0] + [1.0])
 
     # make a new object with the curve
@@ -81,19 +104,7 @@ def assignCarToPath(curve, iterString):
     bpy.ops.object.parent_set(type="FOLLOW")
 
 
-def moveCarToStartingPosition(team_position, curve):
-    max_move_x = 1.81986
-    incremental = max_move_x / len(fileData)
-    x_translate = incremental * team_position
-    y_translate = 0
-    if team_position % 2 != 0:
-        y_translate = 0.394784
 
-    current_x = curve.location[0]
-    current_y = curve.location[1]
-
-    curve.location[0] = current_x - x_translate
-    curve.location[1] = current_y - y_translate
 
 #bpy.ops.transform.translate(value=(-0, -0.394784, -0), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(False, True, False), mirror=True, use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1, use_proportional_connected=False, use_proportional_projected=False, release_confirm=True)
 #bpy.ops.transform.translate(value=(-1.81986, -0, -0), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(True, False, False), mirror=True, use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1, use_proportional_connected=False, use_proportional_projected=False, release_confirm=True)
@@ -122,7 +133,7 @@ for i in fileData:
     print("Assign car to follow path")
     assignCarToPath(curve, iterString)
 
-    if team_position > 0:
-        print("Move car to starting position")
-        moveCarToStartingPosition(team_position, curve)
+    # if team_position > 0:
+    #     print("Move car to starting position")
+    #     moveCarToStartingPosition(team_position, curve)
 

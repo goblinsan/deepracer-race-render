@@ -24,8 +24,7 @@ def getRaceCoords(race, car):
 def getAddedCoordsForStartingPosition(team_position, first_coord):
     max_move_x = 10
     incremental = max_move_x / len(fileData)
-    x_translate = (incremental * team_position) + .3
-    y_translate = 0
+    x_translate = (incremental * team_position) + .4
     if team_position % 2 != 0:
         y_translate = .3
     else:
@@ -111,11 +110,12 @@ def addExplosion(iterString, total_frames):
     smoke_domain = bpy.data.objects['smoke_domain' + iterString]
     smoke_domain.modifiers["Fluid"].domain_settings.cache_frame_start = explosion_frame
     smoke_domain.modifiers["Fluid"].domain_settings.cache_frame_end = explosion_frame + 200
+    smoke_domain.modifiers["Fluid"].domain_settings.cache_directory = '//car_' + iterString + '_explode_cache'
     bpy.data.particles['flame' + iterString].frame_start = explosion_frame
     bpy.data.particles['flame' + iterString].frame_end = explosion_frame + 1
     bpy.data.particles['destroyCar' + iterString].frame_start = explosion_frame
     bpy.data.particles['destroyCar' + iterString].frame_end = total_frames
-    bpy.data.particles['destroyCar' + iterString].lifetime = 200
+    bpy.data.particles['destroyCar' + iterString].lifetime = 1000
 
     smoke_domain.select_set(True)
     bpy.context.view_layer.objects.active = smoke_domain
@@ -135,19 +135,19 @@ for i in fileData:
     total_frames = 24 * car_time
     print("Rendering race data for " + team_name)
 
-    print("Get coordinates plot for " + team_name)
+    print("Get coordinates plot")
     coords = getRaceCoords("sample_race", team_position)
 
-    print("Generating Path for " + team_name)
+    print("Generating Path")
     curve = generatePath(coords, team_position, total_frames)
 
-    print("Generating Car for " + team_name)
+    print("Generating Car")
     generateCar(iterString, car_number, car_color)
 
     print("Assign car to follow path")
     assignCarToPath(curve, iterString)
 
-    print("Add explosion if car crashed")
     if crashed == 'off_track':
+        print("Add explosion to car " + team_name)
         addExplosion(iterString, total_frames)
 

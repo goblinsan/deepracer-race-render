@@ -2,6 +2,7 @@ import yaml
 import json
 import pandas as pd
 from os import path
+from os import chdir
 
 def parse_message( message_text ):
 
@@ -21,7 +22,8 @@ def evaluate_and_sort( raw_log_data ):
 
     # Data conditioning
     df = pd.DataFrame(raw_log_data)
-    df = df[["team","car_no","episode","step","time","progress","state","x-coordinate","y-coordinate"]]
+    df = df[["team","car_no","color","start_pos","episode","step","time",
+             "progress","state","x-coordinate","y-coordinate"]]
     for float_var in ["time","progress","x-coordinate","y-coordinate"]:
         df[float_var] = df[float_var].astype("float")
     for int_var in ["episode","step"]:
@@ -50,8 +52,9 @@ def evaluate_and_sort( raw_log_data ):
     # Merge in the lap summary back to data
     df=df_end_state.merge(df, how="inner", on=["team","episode"])
     df["time"] = df["time"] - df["start_time"]
-    df=df[["race_number","team","car_no","lap_progress", "lap_end_state", "lap_time", "lap_step_count",
-           "episode","step","time","progress","state","x-coordinate","y-coordinate"]]
+    df=df[["race_number","team","car_no","color","start_pos","lap_progress", 
+           "lap_end_state", "lap_time", "lap_step_count","episode","step",
+           "time","progress","state","x-coordinate","y-coordinate"]]
     
     return df
 
@@ -69,6 +72,8 @@ def process_team_log_file( team ):
                 payload = parse_message(msg["message"])
                 payload["team"] = team_name
                 payload["car_no"] = str(int(team["car"])).zfill(2)
+                payload["color"] = team["color"]
+                payload["start_pos"] = team["start_pos"]
                 dr_trace.append(payload)
 
     return dr_trace   
@@ -120,21 +125,29 @@ def generate_races( race_data ):
         race_json = []
         for team in race_teams:
             one_race_team_data = one_race_data[one_race_data.team == team].reset_index(drop=True)
+            race_data_file = f"race data {race_no} team {team}.csv".replace(" ","_").lower()
             race_team_json = { "team": team,
                                "car_no" : one_race_team_data.loc[0, 'car_no'],
+                               "color" : str(one_race_team_data.loc[0, 'color']),
+                               "start_pos" : int(one_race_team_data.loc[0, 'start_pos']),
                                "lap_end_state" : one_race_team_data.loc[0, 'lap_end_state'],
                                "lap_progress" : one_race_team_data.loc[0, 'lap_progress'],
                                "lap_time" : one_race_team_data.loc[0, 'lap_time'],
-                               "plot" : []
+                               "plot_file" : race_data_file
                              }
-            for i in range(one_race_team_data.step.count()):
-                race_team_json["plot"].append( ( one_race_team_data.loc[i, 'x-coordinate'],
-                                              one_race_team_data.loc[i, 'y-coordinate']) )
-                race_json.append(race_team_json)
-
+            race_json.append(race_team_json)
+            with open(path.join("race_data",race_data_file), 'w') as fp:
+                fp.write("x,y\n")
+                for i in range(one_race_team_data.step.count()):
+                    x = one_race_team_data.loc[i, 'x-coordinate']
+                    y = one_race_team_data.loc[i, 'y-coordinate']
+                    fp.write(f"{x},{y}\n")
+    
+        print(race_json)
         with open(path.join("race_data",f'race_{race_no}_data.json'), 'w') as fp:
             json.dump(race_json, fp, sort_keys=False, indent=2)
             
 
 if __name__ == "__main__":
-    process_teams("log_file_map.yml")
+    chdir( path.dirname(__file__))
+    process_teams(  "log_file_map.yml" )

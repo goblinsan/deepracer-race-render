@@ -1,6 +1,10 @@
 - team: Storm
   logfile: eval_logs_storm.json
   car: 01
+  color: aa0000
+  start_pos: 1
 - team: Artificial Racers
   logfile: eval_logs_ar.json
   car: 99
+  color: 00aa00
+  start_pos: 2

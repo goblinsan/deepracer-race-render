@@ -1,0 +1,74 @@
+[
+  {
+    "team": "Artificial Racers",
+    "starting_position": 0,
+    "car_no": "99",
+    "car_color": "0x3333ff",
+    "lap_end_state": "lap_complete",
+    "lap_progress": 100.0,
+    "lap_time": 17.773485898971558,
+    "plot_filepath": "coord_plots/sample_race/car_0.csv"
+  },
+  {
+    "team": "Space Force",
+    "starting_position": 1,
+    "car_no": "42",
+    "car_color": "0xff5050",
+    "lap_end_state": "lap_complete",
+    "lap_progress": 100.0,
+    "lap_time": 14,
+    "plot_filepath": "coord_plots/sample_race/car_1.csv"
+  },
+  {
+    "team": "Comic Relief",
+    "starting_position": 2,
+    "car_no": "00",
+    "car_color": "0xffff66",
+    "lap_end_state": "off_track",
+    "lap_progress": 72.1109,
+    "lap_time": 9,
+    "plot_filepath": "coord_plots/sample_race/car_2.csv"
+  },
+  {
+    "team": "Cutting Tracks",
+    "starting_position": 3,
+    "car_no": "33",
+    "car_color": "0x00004d",
+    "lap_end_state": "lap_complete",
+    "lap_progress": 100.0,
+    "lap_time": 12,
+    "plot_filepath": "coord_plots/sample_race/car_3.csv"
+  },
+  {
+    "team": "Ooops I did it again",
+    "starting_position": 4,
+    "car_no": "13",
+    "car_color": "0x660033",
+    "lap_end_state": "off_track",
+    "lap_progress": 24.1810,
+    "lap_time": 4,
+    "plot_filepath": "coord_plots/sample_race/car_4.csv"
+  },
+  {
+    "team": "Yea Yea",
+    "starting_position": 5,
+    "car_no": "36",
+    "car_color": "0x006600",
+    "lap_end_state": "lap_complete",
+    "lap_progress": 100.0,
+    "lap_time": 16,
+    "plot_filepath": "coord_plots/sample_race/car_5.csv"
+  },
+  {
+    "team": "But Not Least",
+    "starting_position": 6,
+    "car_no": "04",
+    "car_color": "0x662900",
+    "lap_end_state": "lap_complete",
+    "lap_progress": 100.0,
+    "lap_time": 14,
+    "plot_filepath": "coord_plots/sample_race/car_6.csv"
+  }
+]
+
+

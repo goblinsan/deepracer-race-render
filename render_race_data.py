@@ -12,7 +12,7 @@ else:
     rel_race_data_path = "/data_prep/race_data"
 race_data_path = blender_script_dir + rel_race_data_path
 
-with open(race_data_path + "/sample_race.json") as f:
+with open(race_data_path + "/race_1_data.json") as f:
     fileData = json.load(f)
 
 def getRaceCoords(race, car):
@@ -82,9 +82,7 @@ def hex_to_rgb(h,alpha=1):
     return tuple([srgb_to_linearrgb(c/0xff) for c in (r,g,b)] + [alpha])
 
 
-def generateCar(iterString, car_number, car_color):
-    # add car to scene
-    bpy.ops.wm.append(directory="D:\\deepRacer\\deepRacer-race-render\\deepracer-race-render\\race_car.blend\\Collection\\", link=False, filename="race_car")
+def modifyCarAttributes(iterString, car_number, car_color):
     # update number
     numberImage = load_image("D:\\deepRacer\\deepRacer-race-render\\deepracer-race-render\\Textures\\generated\\car_number-assets\\car_number_" + str(car_number) +".png")
     bpy.data.materials['car_material' + iterString].node_tree.nodes['car_number'].image = numberImage
@@ -106,7 +104,7 @@ def assignCarToPath(curve, iterString):
 
 
 def addExplosion(iterString, total_frames):
-    explosion_frame = total_frames - 15
+    explosion_frame = total_frames - 5
     smoke_domain = bpy.data.objects['smoke_domain' + iterString]
     smoke_domain.modifiers["Fluid"].domain_settings.cache_frame_start = explosion_frame
     smoke_domain.modifiers["Fluid"].domain_settings.cache_frame_end = explosion_frame + 200
@@ -121,6 +119,9 @@ def addExplosion(iterString, total_frames):
     bpy.context.view_layer.objects.active = smoke_domain
     bpy.ops.fluid.bake_data()
 
+for i in len(fileData):
+    # add cars to scene
+    bpy.ops.wm.append(directory="D:\\deepRacer\\deepRacer-race-render\\deepracer-race-render\\race_car.blend\\Collection\\", link=False, filename="race_car")
 
 for i in fileData:
     team_position = int(i['starting_position'])
@@ -142,7 +143,7 @@ for i in fileData:
     curve = generatePath(coords, team_position, total_frames)
 
     print("Generating Car")
-    generateCar(iterString, car_number, car_color)
+    modifyCarAttributes(iterString, car_number, car_color)
 
     print("Assign car to follow path")
     assignCarToPath(curve, iterString)

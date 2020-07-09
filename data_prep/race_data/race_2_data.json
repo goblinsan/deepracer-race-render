@@ -1,22 +1,22 @@
 [
   {
     "team": "Artificial Racers",
+    "starting_position": 1,
     "car_no": "99",
-    "color": "00aa00",
-    "start_pos": 2,
+    "car_color": "0xaa00",
     "lap_end_state": "lap_complete",
     "lap_progress": 100.0,
     "lap_time": 18.610535621643066,
-    "plot_file": "race_data_2_team_artificial_racers.csv"
+    "plot_file": "artificial_racers.csv"
   },
   {
     "team": "Storm",
+    "starting_position": 0,
     "car_no": "01",
-    "color": "aa0000",
-    "start_pos": 1,
+    "car_color": "0xaa0000",
     "lap_end_state": "lap_complete",
     "lap_progress": 100.0,
     "lap_time": 18.610535621643066,
-    "plot_file": "race_data_2_team_storm.csv"
+    "plot_file": "storm.csv"
   }
 ]

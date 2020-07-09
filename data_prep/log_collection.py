@@ -3,6 +3,8 @@ import json
 import pandas as pd
 from os import path
 from os import chdir
+from os import makedirs
+
 
 def parse_message( message_text ):
 
@@ -125,19 +127,20 @@ def generate_races( race_data ):
         race_json = []
         for team in race_teams:
             one_race_team_data = one_race_data[one_race_data.team == team].reset_index(drop=True)
-            race_data_file = f"race data {race_no} team {team}.csv".replace(" ","_").lower()
+            race_data_path = f"race_data/coord_plots/race {race_no}/".replace(" ","_").lower()
+            race_data_file = f"{team}.csv".replace(" ","_").lower()
             race_team_json = { "team": team,
+                               "starting_position" : int(one_race_team_data.loc[0, 'start_pos']),
                                "car_no" : one_race_team_data.loc[0, 'car_no'],
-                               "color" : str(one_race_team_data.loc[0, 'color']),
-                               "start_pos" : int(one_race_team_data.loc[0, 'start_pos']),
+                               "car_color" : hex(one_race_team_data.loc[0, 'color']),
                                "lap_end_state" : one_race_team_data.loc[0, 'lap_end_state'],
                                "lap_progress" : one_race_team_data.loc[0, 'lap_progress'],
                                "lap_time" : one_race_team_data.loc[0, 'lap_time'],
                                "plot_file" : race_data_file
                              }
             race_json.append(race_team_json)
-            with open(path.join("race_data",race_data_file), 'w') as fp:
-                fp.write("x,y\n")
+            makedirs(race_data_path, exist_ok=True)
+            with open(path.join(race_data_path,race_data_file), 'w+') as fp:
                 for i in range(one_race_team_data.step.count()):
                     x = one_race_team_data.loc[i, 'x-coordinate']
                     y = one_race_team_data.loc[i, 'y-coordinate']

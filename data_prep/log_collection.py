@@ -140,13 +140,10 @@ def generate_races( race_data ):
                              }
             race_json.append(race_team_json)
             makedirs(race_data_path, exist_ok=True)
-            with open(path.join(race_data_path,race_data_file), 'w+') as fp:
-                for i in range(one_race_team_data.step.count()):
-                    x = one_race_team_data.loc[i, 'x-coordinate']
-                    y = one_race_team_data.loc[i, 'y-coordinate']
-                    fp.write(f"{x},{y}\n")
-    
-        print(race_json)
+            loc_data = one_race_team_data[['x-coordinate', 'y-coordinate']]
+            loc_data = loc_data.rename(columns={"x-coordinate": "x", "y-coordinate": "y"})
+            loc_data.to_csv(path.join(race_data_path,race_data_file),index=False)
+
         with open(path.join("race_data",f'race_{race_no}_data.json'), 'w') as fp:
             json.dump(race_json, fp, sort_keys=False, indent=2)
             

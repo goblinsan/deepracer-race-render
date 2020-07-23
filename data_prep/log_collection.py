@@ -6,6 +6,42 @@ from os import chdir
 from os import makedirs
 
 
+def bomType(file):
+    """
+    returns file encoding string for open() function
+
+    EXAMPLE:
+        bom = bomtype(file)
+        open(file, encoding=bom, errors='ignore')
+    """
+
+    f = open(file, 'rb')
+    b = f.read(4)
+    f.close()
+
+    if (b[0:3] == b'\xef\xbb\xbf'):
+        return "utf8"
+
+    # Python automatically detects endianess if utf-16 bom is present
+    # write endianess generally determined by endianess of CPU
+    if ((b[0:2] == b'\xfe\xff') or (b[0:2] == b'\xff\xfe')):
+        return "utf16"
+
+    if ((b[0:5] == b'\xfe\xff\x00\x00') 
+              or (b[0:5] == b'\x00\x00\xff\xfe')):
+        return "utf32"
+
+    # If BOM is not provided, then assume its the codepage
+    #     used by your operating system
+    return "cp1252"
+    # For the United States its: cp1252
+
+
+def OpenRead(file):
+    bom = bomType(file)
+    return open(file, 'r', encoding=bom, errors='ignore')
+
+
 def parse_message( message_text ):
 
     hdr = "episode,step,x-coordinate,y-coordinate,heading,steering_angle,speed,action_taken,reward,job_completed,all_wheels_on_track,progress, closest_waypoint_index,track_length,time,state"
@@ -68,7 +104,7 @@ def process_team_log_file( team ):
     print(f"Processing {team_name} log file {log_file_name}")
 
     dr_trace = []
-    with open(log_file_name,"r" ) as logfile:
+    with OpenRead(log_file_name ) as logfile:
         for msg in json.load(logfile)["events"]:
             if msg["message"].startswith("SIM_TRACE_LOG:"):
                 payload = parse_message(msg["message"])
@@ -136,7 +172,7 @@ def generate_races( race_data ):
                                "lap_end_state" : one_race_team_data.loc[0, 'lap_end_state'],
                                "lap_progress" : one_race_team_data.loc[0, 'lap_progress'],
                                "lap_time" : one_race_team_data.loc[0, 'lap_time'],
-                               "plot_file" : race_data_file
+                               "plot_file" : f"{race_data_path}/{race_data_file}"
                              }
             race_json.append(race_team_json)
             makedirs(race_data_path, exist_ok=True)

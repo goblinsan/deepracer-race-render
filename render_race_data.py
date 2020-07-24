@@ -4,6 +4,8 @@ import csv
 import bpy
 from bpy_extras.image_utils import load_image
 
+race_num = 2
+
 # setup filepath directories to allow script to run in ide or blender
 blender_script_dir = os.path.dirname(__file__)
 if blender_script_dir.endswith('.blend'):
@@ -12,14 +14,15 @@ else:
     rel_race_data_path = "/data_prep/race_data"
 race_data_path = blender_script_dir + rel_race_data_path
 
-with open(race_data_path + "/race_1_data.json") as f:
+with open(race_data_path + f"/race_{race_num}_data.json") as f:
     fileData = json.load(f)
 
-def getRaceCoords(race, car):
-    car_csv_name = "car_" + str(car) + ".csv"
-    csv_filepath = race_data_path + "/coord_plots/" + race + "/" + car_csv_name
+def getRaceCoords(race, plot_file_path):
+    csv_filepath = blender_script_dir + "/../data_prep/" + plot_file_path
     with open(csv_filepath) as csvfile:
-        return list(csv.reader(csvfile, quoting=csv.QUOTE_NONNUMERIC))
+        reader = csv.reader(csvfile, quoting=csv.QUOTE_NONNUMERIC)
+        next(reader, None)
+        return list(reader)
 
 def getAddedCoordsForStartingPosition(team_position, first_coord):
     max_move_x = 10
@@ -108,7 +111,8 @@ def addExplosion(iterString, total_frames):
     smoke_domain = bpy.data.objects['smoke_domain' + iterString]
     smoke_domain.modifiers["Fluid"].domain_settings.cache_frame_start = explosion_frame
     smoke_domain.modifiers["Fluid"].domain_settings.cache_frame_end = explosion_frame + 200
-    smoke_domain.modifiers["Fluid"].domain_settings.cache_directory = '//car_' + iterString + '_explode_cache'
+    iter_no_dot = iterString[1:]
+    smoke_domain.modifiers["Fluid"].domain_settings.cache_directory = f'//race_{race_num}_car_{iter_no_dot}_explode_cache'
     bpy.data.particles['flame' + iterString].frame_start = explosion_frame
     bpy.data.particles['flame' + iterString].frame_end = explosion_frame + 1
     bpy.data.particles['destroyCar' + iterString].frame_start = explosion_frame
@@ -119,7 +123,7 @@ def addExplosion(iterString, total_frames):
     bpy.context.view_layer.objects.active = smoke_domain
     bpy.ops.fluid.bake_data()
 
-for i in len(fileData):
+for i in range(len(fileData)):
     # add cars to scene
     bpy.ops.wm.append(directory="D:\\deepRacer\\deepRacer-race-render\\deepracer-race-render\\race_car.blend\\Collection\\", link=False, filename="race_car")
 
@@ -133,11 +137,12 @@ for i in fileData:
     car_color = i['car_color']
     car_time = i['lap_time']
     crashed = i['lap_end_state']
+    plot_file_path = i['plot_file']
     total_frames = 24 * car_time
     print("Rendering race data for " + team_name)
 
     print("Get coordinates plot")
-    coords = getRaceCoords("sample_race", team_position)
+    coords = getRaceCoords(f"race_{race_num}", plot_file_path)
 
     print("Generating Path")
     curve = generatePath(coords, team_position, total_frames)

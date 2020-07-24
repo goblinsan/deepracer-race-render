@@ -163,7 +163,7 @@ def generate_races( race_data ):
         race_json = []
         for team in race_teams:
             one_race_team_data = one_race_data[one_race_data.team == team].reset_index(drop=True)
-            race_data_path = f"race_data/coord_plots/race {race_no}/".replace(" ","_").lower()
+            race_data_path = f"race_data/coord_plots/race {race_no}".replace(" ","_").lower()
             race_data_file = f"{team}.csv".replace(" ","_").lower()
             race_team_json = { "team": team,
                                "starting_position" : int(one_race_team_data.loc[0, 'start_pos']),
@@ -178,7 +178,7 @@ def generate_races( race_data ):
             makedirs(race_data_path, exist_ok=True)
             loc_data = one_race_team_data[['x-coordinate', 'y-coordinate']]
             loc_data = loc_data.rename(columns={"x-coordinate": "x", "y-coordinate": "y"})
-            loc_data.to_csv(path.join(race_data_path,race_data_file),index=False)
+            loc_data.to_csv(path.join(race_data_path,race_data_file), header=False, index=False)
 
         with open(path.join("race_data",f'race_{race_no}_data.json'), 'w') as fp:
             json.dump(race_json, fp, sort_keys=False, indent=2)

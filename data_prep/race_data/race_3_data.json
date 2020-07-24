@@ -7,7 +7,7 @@
     "lap_end_state": "off_track",
     "lap_progress": 29.4447,
     "lap_time": 3.7040460109710693,
-    "plot_file": "race_data/coord_plots/race_3//artificial_racer.csv"
+    "plot_file": "race_data/coord_plots/race_3/artificial_racer.csv"
   },
   {
     "team": "BabyStep",
@@ -17,7 +17,7 @@
     "lap_end_state": "lap_complete",
     "lap_progress": 100.0,
     "lap_time": 28.789538145065308,
-    "plot_file": "race_data/coord_plots/race_3//babystep.csv"
+    "plot_file": "race_data/coord_plots/race_3/babystep.csv"
   },
   {
     "team": "Beserk Baby",
@@ -27,7 +27,7 @@
     "lap_end_state": "lap_complete",
     "lap_progress": 100.0,
     "lap_time": 15.939308881759644,
-    "plot_file": "race_data/coord_plots/race_3//beserk_baby.csv"
+    "plot_file": "race_data/coord_plots/race_3/beserk_baby.csv"
   },
   {
     "team": "BlueStreak",
@@ -37,7 +37,7 @@
     "lap_end_state": "off_track",
     "lap_progress": 52.8805,
     "lap_time": 7.195224046707153,
-    "plot_file": "race_data/coord_plots/race_3//bluestreak.csv"
+    "plot_file": "race_data/coord_plots/race_3/bluestreak.csv"
   },
   {
     "team": "GhostRiderz",
@@ -47,7 +47,7 @@
     "lap_end_state": "lap_complete",
     "lap_progress": 100.0,
     "lap_time": 13.017506837844849,
-    "plot_file": "race_data/coord_plots/race_3//ghostriderz.csv"
+    "plot_file": "race_data/coord_plots/race_3/ghostriderz.csv"
   },
   {
     "team": "Lightning McQueen",
@@ -57,7 +57,7 @@
     "lap_end_state": "off_track",
     "lap_progress": 73.0259,
     "lap_time": 14.919102191925049,
-    "plot_file": "race_data/coord_plots/race_3//lightning_mcqueen.csv"
+    "plot_file": "race_data/coord_plots/race_3/lightning_mcqueen.csv"
   },
   {
     "team": "Marathon",
@@ -67,7 +67,7 @@
     "lap_end_state": "off_track",
     "lap_progress": 68.4207,
     "lap_time": 20.305668830871582,
-    "plot_file": "race_data/coord_plots/race_3//marathon.csv"
+    "plot_file": "race_data/coord_plots/race_3/marathon.csv"
   },
   {
     "team": "PIM Particle",
@@ -77,7 +77,7 @@
     "lap_end_state": "lap_complete",
     "lap_progress": 100.0,
     "lap_time": 15.704150438308716,
-    "plot_file": "race_data/coord_plots/race_3//pim_particle.csv"
+    "plot_file": "race_data/coord_plots/race_3/pim_particle.csv"
   },
   {
     "team": "RB",
@@ -87,7 +87,7 @@
     "lap_end_state": "lap_complete",
     "lap_progress": 100.0,
     "lap_time": 11.34822416305542,
-    "plot_file": "race_data/coord_plots/race_3//rb.csv"
+    "plot_file": "race_data/coord_plots/race_3/rb.csv"
   },
   {
     "team": "RaceCar",
@@ -97,7 +97,7 @@
     "lap_end_state": "lap_complete",
     "lap_progress": 100.0,
     "lap_time": 18.109851598739624,
-    "plot_file": "race_data/coord_plots/race_3//racecar.csv"
+    "plot_file": "race_data/coord_plots/race_3/racecar.csv"
   },
   {
     "team": "Speed Racer",
@@ -107,7 +107,7 @@
     "lap_end_state": "lap_complete",
     "lap_progress": 100.0,
     "lap_time": 10.601391315460205,
-    "plot_file": "race_data/coord_plots/race_3//speed_racer.csv"
+    "plot_file": "race_data/coord_plots/race_3/speed_racer.csv"
   },
   {
     "team": "Storm",
@@ -117,7 +117,7 @@
     "lap_end_state": "off_track",
     "lap_progress": 48.0026,
     "lap_time": 7.5785253047943115,
-    "plot_file": "race_data/coord_plots/race_3//storm.csv"
+    "plot_file": "race_data/coord_plots/race_3/storm.csv"
   },
   {
     "team": "T-Minus-10",
@@ -127,6 +127,6 @@
     "lap_end_state": "lap_complete",
     "lap_progress": 100.0,
     "lap_time": 16.0156090259552,
-    "plot_file": "race_data/coord_plots/race_3//t-minus-10.csv"
+    "plot_file": "race_data/coord_plots/race_3/t-minus-10.csv"
   }
 ]

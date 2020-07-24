@@ -2,8 +2,10 @@ import os
 import json
 import csv
 import bpy
+import time
 from bpy_extras.image_utils import load_image
 
+current_time = int(round(time.time() * 1000))
 race_num = 2
 
 # setup filepath directories to allow script to run in ide or blender
@@ -112,16 +114,16 @@ def addExplosion(iterString, total_frames):
     smoke_domain.modifiers["Fluid"].domain_settings.cache_frame_start = explosion_frame
     smoke_domain.modifiers["Fluid"].domain_settings.cache_frame_end = explosion_frame + 200
     iter_no_dot = iterString[1:]
-    smoke_domain.modifiers["Fluid"].domain_settings.cache_directory = f'//race_{race_num}_car_{iter_no_dot}_explode_cache'
+    smoke_domain.modifiers["Fluid"].domain_settings.cache_directory = f'//race_{race_num}_car_{iter_no_dot}_{current_time}_explode_cache'
     bpy.data.particles['flame' + iterString].frame_start = explosion_frame
     bpy.data.particles['flame' + iterString].frame_end = explosion_frame + 1
     bpy.data.particles['destroyCar' + iterString].frame_start = explosion_frame
     bpy.data.particles['destroyCar' + iterString].frame_end = total_frames
     bpy.data.particles['destroyCar' + iterString].lifetime = 1000
 
-    smoke_domain.select_set(True)
-    bpy.context.view_layer.objects.active = smoke_domain
-    bpy.ops.fluid.bake_data()
+#    smoke_domain.select_set(True)
+#    bpy.context.view_layer.objects.active = smoke_domain
+#    bpy.ops.fluid.bake_data()
 
 for i in range(len(fileData)):
     # add cars to scene

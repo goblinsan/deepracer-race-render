@@ -22,7 +22,7 @@
   {
     "team": "Beserk Baby",
     "starting_position": 1,
-    "car_no": "99",
+    "car_no": "22",
     "car_color": "0xaa00",
     "lap_end_state": "lap_complete",
     "lap_progress": 100.0,
@@ -82,8 +82,8 @@
   {
     "team": "RB",
     "starting_position": 6,
-    "car_no": "22",
-    "car_color": "0xa0a0a",
+    "car_no": "99",
+    "car_color": "0x0",
     "lap_end_state": "lap_complete",
     "lap_progress": 100.0,
     "lap_time": 11.08405089378357,
@@ -122,7 +122,7 @@
   {
     "team": "T-Minus-10",
     "starting_position": 4,
-    "car_no": "77",
+    "car_no": "10",
     "car_color": "0xaaaaaa",
     "lap_end_state": "lap_complete",
     "lap_progress": 100.0,

@@ -5,7 +5,7 @@
   start_pos: 0
 - team: Beserk Baby
   logfile: berserkbaby-srb-v3-r007.a.log
-  car: 99
+  car: 22
   color: 0x00AA00
   start_pos: 1
 - team: Artificial Racer
@@ -20,7 +20,7 @@
   start_pos: 3
 - team: T-Minus-10
   logfile: TM10-718-S2-M2-Clone.log
-  car: 77
+  car: 10
   color: 0xAAAAAA
   start_pos: 4
 - team: BabyStep
@@ -30,8 +30,8 @@
   start_pos: 5
 - team: RB
   logfile: RB.log
-  car: 22
-  color: 0x0A0A0A
+  car: 99
+  color: 0x000000
   start_pos: 6
 - team: GhostRiderz
   logfile: GhostRiderz-amy-406v4.a.log

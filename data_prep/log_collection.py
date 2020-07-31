@@ -1,6 +1,7 @@
 import yaml
 import json
 import pandas as pd
+import numpy as np
 from os import path
 from os import chdir
 from os import makedirs
@@ -86,6 +87,9 @@ def evaluate_and_sort( raw_log_data ):
     df_end_state = df_end_state.rename(columns={"progress": "lap_progress", 
                                             "state": "lap_end_state", "step": "lap_step_count"})
    
+    # invert the race sequence so they run slowest to fastest
+    max_lap_number = df_end_state["race_number"].max()
+    df_end_state["race_number"] = max_lap_number + 1 - df_end_state["race_number"]
 
     # Merge in the lap summary back to data
     df=df_end_state.merge(df, how="inner", on=["team","episode"])
@@ -148,8 +152,18 @@ def generate_leaderboards( race_data ):
         one_race_lb= one_race_lb.reset_index(drop=True)
         one_race_lb.index = one_race_lb.index + 1
         one_race_lb.index.name = "Place"
-        one_race_lb.drop(["race_number"], axis=1, inplace=True)
-        one_race_lb.to_html(path.join("race_data",f'race_{race_no}_results.html'))
+        
+        prior_time = 0.0
+        one_race_lb["Delta"] = 0.0
+        for index_label, row_series in one_race_lb.iterrows():
+            # For each row update the 'Bonus' value to it's double
+            if one_race_lb.at[index_label , 'lap_end_state'] == 'lap_complete' and prior_time is not 0.0:
+                one_race_lb.at[index_label , 'Delta'] = row_series['lap_time'] -  prior_time
+            else:
+                one_race_lb.at[index_label , 'Delta'] = np.NaN
+            prior_time = row_series['lap_time'] 
+
+        one_race_lb.to_csv(path.join("race_data",f'race_{race_no}_results.csv'))
 
 
 def generate_races( race_data ):

@@ -55,7 +55,7 @@ def parse_message( message_text ):
     for i in range(len(data)):
         data_dict[headers[i]] = data[i]
 
-    return data_dict
+    return data_dict    
 
 def evaluate_and_sort( raw_log_data ):
 
@@ -83,13 +83,13 @@ def evaluate_and_sort( raw_log_data ):
     df_end_state = df_end_state.merge(df_max_time, on=["team","episode"])
     df_end_state["lap_time"] = df_end_state["end_time"] - df_end_state["start_time"] 
     df_end_state = df_end_state.sort_values(by=["team","progress","lap_time"], ascending=[True,False,True]).reset_index(drop=True)
-    df_end_state["race_number"] = df_end_state.index + 1
+    df_end_state["race_index"] = df_end_state.index + 1
     df_end_state = df_end_state.rename(columns={"progress": "lap_progress", 
                                             "state": "lap_end_state", "step": "lap_step_count"})
    
     # invert the race sequence so they run slowest to fastest
-    max_lap_number = df_end_state["race_number"].max()
-    df_end_state["race_number"] = max_lap_number + 1 - df_end_state["race_number"]
+    max_lap_number = df_end_state["race_index"].max() + 1
+    df_end_state["race_number"] = max_lap_number - df_end_state["race_index"]
 
     # Merge in the lap summary back to data
     df=df_end_state.merge(df, how="inner", on=["team","episode"])
@@ -100,7 +100,7 @@ def evaluate_and_sort( raw_log_data ):
     
     return df
 
-def process_team_log_file( team ):
+def process_team_log_file( team, new_style_log = True ):
 
     team_name = team["team"]
     log_file_name = path.join("cloudwatch_logs",team["logfile"])
@@ -108,15 +108,28 @@ def process_team_log_file( team ):
     print(f"Processing {team_name} log file {log_file_name}")
 
     dr_trace = []
-    with OpenRead(log_file_name ) as logfile:
-        for msg in json.load(logfile)["events"]:
-            if msg["message"].startswith("SIM_TRACE_LOG:"):
-                payload = parse_message(msg["message"])
-                payload["team"] = team_name
-                payload["car_no"] = str(int(team["car"])).zfill(2)
-                payload["color"] = team["color"]
-                payload["start_pos"] = team["start_pos"]
-                dr_trace.append(payload)
+
+    if not new_style_log :
+        with OpenRead(log_file_name ) as logfile:
+            for msg in json.load(logfile)["events"]:
+                if msg["message"].startswith("SIM_TRACE_LOG:"):
+                    payload = parse_message(msg["message"])
+                    payload["team"] = team_name
+                    payload["car_no"] = str(int(team["car"])).zfill(2)
+                    payload["color"] = team["color"]
+                    payload["start_pos"] = team["start_pos"]
+                    dr_trace.append(payload)
+    else:
+         with OpenRead(log_file_name ) as logfile:
+            for line in logfile.readlines():
+                if line.startswith("SIM_TRACE_LOG:"):
+                    payload = parse_message(line.replace("\n",""))
+                    #print(payload)
+                    payload["team"] = team_name
+                    payload["car_no"] = str(int(team["car"])).zfill(2)
+                    payload["color"] = team["color"]
+                    payload["start_pos"] = team["start_pos"]
+                    dr_trace.append(payload)       
 
     return dr_trace   
 
@@ -139,7 +152,7 @@ def process_teams( yaml_file = "log_file_map.yml"):
     full_data_set.sort_values(by=["race_number","team","step"], inplace=True)
     generate_races(full_data_set)
     generate_leaderboards(full_data_set)
-    #full_data_set.to_csv("race_data_out.csv", index=False)
+    full_data_set.to_csv("race_data_out.csv", index=False)
 
 def generate_leaderboards( race_data ):
 
@@ -169,7 +182,7 @@ def generate_leaderboards( race_data ):
 def generate_races( race_data ):
 
     race_list = race_data.race_number.unique()
-
+    
     for race_no in race_list:
         print(f"Generate Race Data {race_no}")
         one_race_data = race_data[race_data.race_number == race_no]

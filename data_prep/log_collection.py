@@ -1,6 +1,7 @@
 import yaml
 import json
 import pandas as pd
+import numpy as np
 from os import path
 from os import chdir
 from os import makedirs
@@ -54,7 +55,7 @@ def parse_message( message_text ):
     for i in range(len(data)):
         data_dict[headers[i]] = data[i]
 
-    return data_dict
+    return data_dict    
 
 def evaluate_and_sort( raw_log_data ):
 
@@ -82,10 +83,12 @@ def evaluate_and_sort( raw_log_data ):
     df_end_state = df_end_state.merge(df_max_time, on=["team","episode"])
     df_end_state["lap_time"] = df_end_state["end_time"] - df_end_state["start_time"] 
     df_end_state = df_end_state.sort_values(by=["team","progress","lap_time"], ascending=[True,False,True]).reset_index(drop=True)
-    df_end_state["race_number"] = df_end_state.index + 1
+    df_end_state["race_index"] = df_end_state.index + 1
     df_end_state = df_end_state.rename(columns={"progress": "lap_progress", 
                                             "state": "lap_end_state", "step": "lap_step_count"})
    
+    # invert the race sequence so they run slowest to fastest
+    df_end_state["race_number"] = df_end_state["race_index"]
 
     # Merge in the lap summary back to data
     df=df_end_state.merge(df, how="inner", on=["team","episode"])
@@ -96,7 +99,7 @@ def evaluate_and_sort( raw_log_data ):
     
     return df
 
-def process_team_log_file( team ):
+def process_team_log_file( team, new_style_log = True ):
 
     team_name = team["team"]
     log_file_name = path.join("cloudwatch_logs",team["logfile"])
@@ -104,15 +107,28 @@ def process_team_log_file( team ):
     print(f"Processing {team_name} log file {log_file_name}")
 
     dr_trace = []
-    with OpenRead(log_file_name ) as logfile:
-        for msg in json.load(logfile)["events"]:
-            if msg["message"].startswith("SIM_TRACE_LOG:"):
-                payload = parse_message(msg["message"])
-                payload["team"] = team_name
-                payload["car_no"] = str(int(team["car"])).zfill(2)
-                payload["color"] = team["color"]
-                payload["start_pos"] = team["start_pos"]
-                dr_trace.append(payload)
+
+    if not new_style_log :
+        with OpenRead(log_file_name ) as logfile:
+            for msg in json.load(logfile)["events"]:
+                if msg["message"].startswith("SIM_TRACE_LOG:"):
+                    payload = parse_message(msg["message"])
+                    payload["team"] = team_name
+                    payload["car_no"] = str(int(team["car"])).zfill(2)
+                    payload["color"] = team["color"]
+                    payload["start_pos"] = team["start_pos"]
+                    dr_trace.append(payload)
+    else:
+         with OpenRead(log_file_name ) as logfile:
+            for line in logfile.readlines():
+                if line.startswith("SIM_TRACE_LOG:"):
+                    payload = parse_message(line.replace("\n",""))
+                    #print(payload)
+                    payload["team"] = team_name
+                    payload["car_no"] = str(int(team["car"])).zfill(2)
+                    payload["color"] = team["color"]
+                    payload["start_pos"] = team["start_pos"]
+                    dr_trace.append(payload)       
 
     return dr_trace   
 
@@ -133,9 +149,17 @@ def process_teams( yaml_file = "log_file_map.yml"):
             full_data_set = pd.concat([full_data_set,team_data])
 
     full_data_set.sort_values(by=["race_number","team","step"], inplace=True)
+
+    # Individual Lap Races
     generate_races(full_data_set)
     generate_leaderboards(full_data_set)
-    #full_data_set.to_csv("race_data_out.csv", index=False)
+    full_data_set.to_csv("race_data_out.csv", index=False)
+
+    # 3 Lap Races
+    data_set_3lap = full_data_set[ full_data_set.race_number <=3 ]
+    generate_3_lap_race(data_set_3lap)
+    generate_leaderboard_3lap(data_set_3lap)
+
 
 def generate_leaderboards( race_data ):
 
@@ -148,14 +172,24 @@ def generate_leaderboards( race_data ):
         one_race_lb= one_race_lb.reset_index(drop=True)
         one_race_lb.index = one_race_lb.index + 1
         one_race_lb.index.name = "Place"
-        one_race_lb.drop(["race_number"], axis=1, inplace=True)
-        one_race_lb.to_html(path.join("race_data",f'race_{race_no}_results.html'))
+        
+        prior_time = 0.0
+        one_race_lb["Delta"] = 0.0
+        for index_label, row_series in one_race_lb.iterrows():
+            # For each row update the 'Bonus' value to it's double
+            if one_race_lb.at[index_label , 'lap_end_state'] == 'lap_complete' and prior_time is not 0.0:
+                one_race_lb.at[index_label , 'Delta'] = row_series['lap_time'] -  prior_time
+            else:
+                one_race_lb.at[index_label , 'Delta'] = np.NaN
+            prior_time = row_series['lap_time'] 
+
+        one_race_lb.to_csv(path.join("race_data_single_laps",f'race_{race_no}_results.csv'))
 
 
 def generate_races( race_data ):
 
     race_list = race_data.race_number.unique()
-
+    
     for race_no in race_list:
         print(f"Generate Race Data {race_no}")
         one_race_data = race_data[race_data.race_number == race_no]
@@ -163,7 +197,7 @@ def generate_races( race_data ):
         race_json = []
         for team in race_teams:
             one_race_team_data = one_race_data[one_race_data.team == team].reset_index(drop=True)
-            race_data_path = f"race_data/coord_plots/race {race_no}".replace(" ","_").lower()
+            race_data_path = path.join("race_data_single_laps","coord_plots",f"race {race_no}".replace(" ","_").lower())
             race_data_file = f"{team}.csv".replace(" ","_").lower()
             race_team_json = { "team": team,
                                "starting_position" : int(one_race_team_data.loc[0, 'start_pos']),
@@ -180,9 +214,70 @@ def generate_races( race_data ):
             loc_data = loc_data.rename(columns={"x-coordinate": "x", "y-coordinate": "y"})
             loc_data.to_csv(path.join(race_data_path,race_data_file), header=False, index=False)
 
-        with open(path.join("race_data",f'race_{race_no}_data.json'), 'w') as fp:
+        with open(path.join("race_data_single_laps",f'race_{race_no}_data.json'), 'w') as fp:
             json.dump(race_json, fp, sort_keys=False, indent=2)
             
+def generate_3_lap_race( race_data ):
+    print(f"Generate 3Lap Data")
+    race_teams = race_data.team.unique()
+    race_data_path = path.join("race_data_best_3laps","coord_plots")
+    makedirs(race_data_path, exist_ok=True) 
+    for team in race_teams:
+        race_data_file = f"{team}.csv".replace(" ","_").lower()   
+        one_race_team_data = race_data[race_data.team == team].reset_index(drop=True)
+        last_complete_lap = one_race_team_data[ one_race_team_data['lap_end_state'] == 'lap_complete']
+        if last_complete_lap.count == 0:
+           keep_lap = 1
+        else:
+           keep_lap = min( last_complete_lap.race_number.max() + 1, 3)
+        one_race_team_data = one_race_team_data[one_race_team_data.race_number <= keep_lap]    
+        loc_data = one_race_team_data[['x-coordinate', 'y-coordinate']]
+        loc_data = loc_data.rename(columns={"x-coordinate": "x", "y-coordinate": "y"})
+        loc_data.to_csv(path.join(race_data_path,race_data_file), header=False, index=False)
+
+def generate_leaderboard_3lap( race_data ):
+    print(f"Generate 3Lap Summary")
+    race_data_path = "race_data_best_3laps"
+    makedirs(race_data_path, exist_ok=True) 
+
+    all_teams = race_data[["team","car_no"]].copy().drop_duplicates()
+
+    summary = race_data[race_data["lap_end_state"]=="lap_complete"]
+    summary = summary[["race_number","team","car_no","lap_time"]].copy().drop_duplicates()
+
+    lap1 = summary[summary.race_number == 1][["team","car_no","lap_time"]]
+    lap1.rename(columns={"lap_time":"lap1_time"},inplace=True)
+    lap2 = summary[summary.race_number == 2][["team","car_no","lap_time"]]
+    lap2.rename(columns={"lap_time":"lap2_time"},inplace=True)
+    lap3 = summary[summary.race_number == 3][["team","car_no","lap_time"]]
+    lap3.rename(columns={"lap_time":"lap3_time"},inplace=True)    
+
+    race = pd.merge(all_teams,lap1,on=["team","car_no"],how="outer")
+    race = pd.merge(race,lap2,on=["team","car_no"],how="outer")
+    race = pd.merge(race,lap3,on=["team","car_no"],how="outer")
+    print(race)
+
+    race["lap_total"] = race["lap1_time"]+race["lap2_time"]+race["lap3_time"]
+    race["lap_average"] = race["lap_total"] / 3.0
+    race["best2lap"] = race["lap1_time"]+race["lap2_time"]
+    race.sort_values(by=["lap_average","best2lap","lap1_time"], inplace=True)
+    race = race.reset_index(drop=True)
+    race.index = race.index + 1
+    race.index.name = "Place"
+    race = race.drop(['best2lap'], axis=1)
+
+    prior_time = 0.0
+    race["delta"] = 0.0
+    for index_label, row_series in race.iterrows():
+        if race.at[index_label , 'lap_average'] != np.NaN and prior_time is not 0.0:
+            race.at[index_label , 'delta'] = row_series['lap_average'] -  prior_time
+        else:
+            race.at[index_label , 'delta'] = np.NaN
+        prior_time = row_series['lap_average'] 
+
+    print(race)
+    race.to_csv(path.join(race_data_path,f"3lap_results.csv"))
+
 
 if __name__ == "__main__":
     chdir( path.dirname(__file__))

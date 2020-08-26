@@ -1,4 +1,5 @@
 import yaml
+import argparse
 import json
 import pandas as pd
 import numpy as np
@@ -99,7 +100,7 @@ def evaluate_and_sort( raw_log_data ):
     
     return df
 
-def process_team_log_file( team, new_style_log = True ):
+def process_team_log_file( team, new_style_log = False ):
 
     team_name = team["team"]
     log_file_name = path.join("cloudwatch_logs",team["logfile"])
@@ -132,7 +133,7 @@ def process_team_log_file( team, new_style_log = True ):
 
     return dr_trace   
 
-def process_teams( yaml_file = "log_file_map.yml"):
+def process_teams( yaml_file = "log_file_map.yml", use_new_log_mode = True ):
 
     with open(yaml_file,"r") as yfp:
         file_to_team_map = yaml.load(yfp, Loader=yaml.FullLoader)
@@ -140,7 +141,7 @@ def process_teams( yaml_file = "log_file_map.yml"):
     full_data_set = None
 
     for team in file_to_team_map:
-        raw_log_data = process_team_log_file( team )
+        raw_log_data = process_team_log_file( team, use_new_log_mode )
         team_data = evaluate_and_sort(raw_log_data)
 
         if full_data_set is None:
@@ -222,6 +223,7 @@ def generate_3_lap_race( race_data ):
     race_teams = race_data.team.unique()
     race_data_path = path.join("race_data_best_3laps","coord_plots")
     makedirs(race_data_path, exist_ok=True) 
+    race_json = []
     for team in race_teams:
         race_data_file = f"{team}.csv".replace(" ","_").lower()   
         one_race_team_data = race_data[race_data.team == team].reset_index(drop=True)
@@ -229,11 +231,30 @@ def generate_3_lap_race( race_data ):
         if last_complete_lap.count == 0:
            keep_lap = 1
         else:
-           keep_lap = min( last_complete_lap.race_number.max() + 1, 3)
+           keep_lap = min(last_complete_lap.race_number.max()+1,3)
         one_race_team_data = one_race_team_data[one_race_team_data.race_number <= keep_lap]    
         loc_data = one_race_team_data[['x-coordinate', 'y-coordinate']]
         loc_data = loc_data.rename(columns={"x-coordinate": "x", "y-coordinate": "y"})
         loc_data.to_csv(path.join(race_data_path,race_data_file), header=False, index=False)
+        one_race_team_data_lap = one_race_team_data[["team","start_pos","car_no",
+                                                     "color","lap_end_state",
+                                                     "lap_progress","lap_time"
+                                                      ]].copy().drop_duplicates()
+        print(one_race_team_data_lap)
+        race_team_json = { "team": team,
+                               "starting_position" : int(one_race_team_data_lap.loc[0, 'start_pos']),
+                               "car_no" : one_race_team_data_lap.loc[0, 'car_no'],
+                               "car_color" : hex(one_race_team_data_lap.loc[0, 'color']),
+                               "lap_end_state" : one_race_team_data_lap.lap_end_state.max(),
+                               "lap_progress" : one_race_team_data_lap.lap_progress.sum() / 3.0,
+                               "lap_time" : one_race_team_data_lap.lap_time.sum(),
+                               "plot_file" : f"{race_data_path}/{race_data_file}"
+                             }
+        race_json.append(race_team_json)
+        print(race_team_json)
+    with open(path.join("race_data_best_3laps",f'race_data.json'), 'w') as fp:
+        json.dump(race_json, fp, sort_keys=False, indent=2)
+
 
 def generate_leaderboard_3lap( race_data ):
     print(f"Generate 3Lap Summary")
@@ -280,5 +301,16 @@ def generate_leaderboard_3lap( race_data ):
 
 
 if __name__ == "__main__":
+
+    
+    parser = argparse.ArgumentParser(description='DeepRacer Log Collection and Race Data Generator')
+    parser.add_argument('--legacy','-l', action="store_true", default=False,
+                        help="Legacy Cloudwatch mode, use for directly exported CloudWatch Files")
+
+    args = parser.parse_args()
+    if args.legacy:
+        print("Using Legacy CloudWatch export mode.")
+
+
     chdir( path.dirname(__file__))
-    process_teams(  "log_file_map.yml" )
+    process_teams(  "log_file_map.yml", not args.legacy )

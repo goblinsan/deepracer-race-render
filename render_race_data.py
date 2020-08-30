@@ -31,9 +31,9 @@ def getAddedCoordsForStartingPosition(team_position, first_coord):
     incremental = max_move_x / len(fileData)
     x_translate = (incremental * team_position) + .4
     if team_position % 2 != 0:
-        y_translate = .3
+        y_translate = .2
     else:
-        y_translate = -.1
+        y_translate = -.15
 
     current_x = first_coord[0]
     current_y = first_coord[1]

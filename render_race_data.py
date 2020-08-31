@@ -6,7 +6,7 @@ import time
 from bpy_extras.image_utils import load_image
 
 current_time = int(round(time.time() * 1000))
-race_num = 2
+race_num = 4
 
 # setup filepath directories to allow script to run in ide or blender
 blender_script_dir = os.path.dirname(__file__)
@@ -31,9 +31,9 @@ def getAddedCoordsForStartingPosition(team_position, first_coord):
     incremental = max_move_x / len(fileData)
     x_translate = (incremental * team_position) + .4
     if team_position % 2 != 0:
-        y_translate = .3
+        y_translate = .2
     else:
-        y_translate = -.1
+        y_translate = -.15
 
     current_x = first_coord[0]
     current_y = first_coord[1]
@@ -106,24 +106,39 @@ def assignCarToPath(curve, iterString):
 
     bpy.context.view_layer.objects.active = curve
     bpy.ops.object.parent_set(type="FOLLOW")
+    explode_color = objects['explode-sprite-color' + iterString]
+    explode_color.hide_render = True
+    explode_shadow = objects['explode-sprite-shadow' + iterString]
+    explode_shadow.hide_render = True
+    
 
+
+def setExplodeVisibilityKeyframes(sprite, start_frame):
+    sprite.keyframe_insert('hide_render')
+    sprite.hide_render = False
+    sprite.keyframe_insert('hide_render', frame = start_frame)
+    sprite.hide_render = True
+    sprite.keyframe_insert('hide_render', frame = start_frame + 160)
+    
 
 def addExplosion(iterString, total_frames):
     explosion_frame = total_frames - 5
-    smoke_domain = bpy.data.objects['smoke_domain' + iterString]
-    smoke_domain.modifiers["Fluid"].domain_settings.cache_frame_start = explosion_frame
-    smoke_domain.modifiers["Fluid"].domain_settings.cache_frame_end = explosion_frame + 200
-    iter_no_dot = iterString[1:]
-    smoke_domain.modifiers["Fluid"].domain_settings.cache_directory = f'//race_{race_num}_car_{iter_no_dot}_{current_time}_explode_cache'
-    bpy.data.particles['flame' + iterString].frame_start = explosion_frame
-    bpy.data.particles['flame' + iterString].frame_end = explosion_frame + 1
+
     bpy.data.particles['destroyCar' + iterString].frame_start = explosion_frame
     bpy.data.particles['destroyCar' + iterString].frame_end = total_frames
     bpy.data.particles['destroyCar' + iterString].lifetime = 1000
+    
+    objects = bpy.data.objects
+    explode_color = objects['explode-sprite-color' + iterString]
+    setExplodeVisibilityKeyframes(explode_color, explosion_frame)
+    explode_shadow = objects['explode-sprite-shadow' + iterString]
+    explode_shadow.constraints['Locked Track'].target = objects['track-sun']
+    setExplodeVisibilityKeyframes(explode_shadow, explosion_frame)
+    
+    bpy.data.materials['explosion' + iterString].node_tree.nodes['sprite-texture'].image_user.frame_start = explosion_frame
+    bpy.data.materials['explosion_shadow' + iterString].node_tree.nodes['sprite-texture'].image_user.frame_start = explosion_frame
+    
 
-#    smoke_domain.select_set(True)
-#    bpy.context.view_layer.objects.active = smoke_domain
-#    bpy.ops.fluid.bake_data()
 
 for i in range(len(fileData)):
     # add cars to scene

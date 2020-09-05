@@ -5,7 +5,16 @@ import sys
 import datetime
 
 import bpy
-from bpy_extras.image_utils import load_image
+
+blend_dir = os.path.dirname(bpy.data.filepath)
+if blend_dir not in sys.path:
+    sys.path.append(blend_dir)
+
+import car_customize
+import car_explosions
+import importlib
+
+importlib.reload(car_customize)
 
 argv = sys.argv
 try:
@@ -96,32 +105,6 @@ def generatePath(coords, racer_number, total_frames):
     return new_curve
 
 
-def srgb_to_linearrgb(c):
-    if c < 0:
-        return 0
-    elif c < 0.04045:
-        return c / 12.92
-    else:
-        return ((c + 0.055) / 1.055) ** 2.4
-
-
-def hex_to_rgb(h, alpha=1):
-    r = (h & 0xff0000) >> 16
-    g = (h & 0x00ff00) >> 8
-    b = (h & 0x0000ff)
-    return tuple([srgb_to_linearrgb(c / 0xff) for c in (r, g, b)] + [alpha])
-
-
-def modifyCarAttributes(iterString, car_number, car_color):
-    # update number
-    car_num_path = "/generated/car_number-assets/car_number_"
-    numberImage = load_image(texture_path + car_num_path + str(car_number) + ".png")
-    bpy.data.materials['car_material' + iterString].node_tree.nodes['car_number'].image = numberImage
-    # update color
-    bpy.data.materials['car_material' + iterString].node_tree.nodes['car_color'].outputs[0].default_value = hex_to_rgb(
-        int(car_color, 16))
-
-
 def assignCarToPath(curve, iterString):
     objects = bpy.data.objects
     car_base = objects['car_base' + iterString]
@@ -133,39 +116,10 @@ def assignCarToPath(curve, iterString):
 
     bpy.context.view_layer.objects.active = curve
     bpy.ops.object.parent_set(type="FOLLOW")
-    #bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
     explode_color = objects['explode-sprite-color' + iterString]
     explode_color.hide_render = True
     explode_shadow = objects['explode-sprite-shadow' + iterString]
     explode_shadow.hide_render = True
-
-
-def setExplodeVisibilityKeyframes(sprite, start_frame):
-    sprite.keyframe_insert('hide_render')
-    sprite.hide_render = False
-    sprite.keyframe_insert('hide_render', frame=start_frame)
-    sprite.hide_render = True
-    sprite.keyframe_insert('hide_render', frame=start_frame + 160)
-
-
-def addExplosion(iterString, total_frames):
-    explosion_frame = total_frames - 5
-
-    bpy.data.particles['destroyCar' + iterString].frame_start = explosion_frame
-    bpy.data.particles['destroyCar' + iterString].frame_end = total_frames
-    bpy.data.particles['destroyCar' + iterString].lifetime = 5000
-
-    objects = bpy.data.objects
-    explode_color = objects['explode-sprite-color' + iterString]
-    setExplodeVisibilityKeyframes(explode_color, explosion_frame)
-    explode_shadow = objects['explode-sprite-shadow' + iterString]
-    explode_shadow.constraints['Locked Track'].target = objects['track-sun']
-    setExplodeVisibilityKeyframes(explode_shadow, explosion_frame)
-
-    bpy.data.materials['explosion' + iterString].node_tree.nodes[
-        'sprite-texture'].image_user.frame_start = explosion_frame
-    bpy.data.materials['explosion_shadow' + iterString].node_tree.nodes[
-        'sprite-texture'].image_user.frame_start = explosion_frame
 
 
 for i in range(len(fileData)):
@@ -175,11 +129,18 @@ for i in range(len(fileData)):
         directory=car_collection_path,
         link=False, filename="race_car")
 
-for i in fileData:
-    team_position = int(i['starting_position'])
+
+def getIterString(team_position):
     iterString = ''
     if team_position > 0:
         iterString = "." + str(team_position).zfill(3)
+
+    return iterString
+
+
+for i in fileData:
+    team_position = int(i['starting_position'])
+    iterString = getIterString(team_position)
     team_name = i['team']
     car_number = i['car_no']
     car_color = i['car_color']
@@ -196,21 +157,35 @@ for i in fileData:
     curve = generatePath(coords, team_position, total_frames)
 
     print("  Generating Car")
-    modifyCarAttributes(iterString, car_number, car_color)
+    car_customize.modifyCarAttributes(texture_path, iterString, car_number, car_color)
 
     print("  Assign car to follow path")
     assignCarToPath(curve, iterString)
 
     if crashed == 'off_track':
         print("  !!! Add explosion to car " + team_name)
-        addExplosion(iterString, total_frames)
+        car_explosions.addExplosion(iterString, total_frames)
 
 # set animation duration
 bpy.context.scene.frame_end = max_frame
 
-print("\nSaving race blend file as:")
 today = datetime.date.today()
-bpy.ops.wm.save_as_mainfile(filepath=f"{bpy.path.abspath('//')}race_{today}.blend")
+race_blend_path = f"{bpy.path.abspath('//')}race_{today}.blend"
+print(f"\nSaving race blend file as: {race_blend_path}")
+bpy.ops.wm.save_as_mainfile(filepath=race_blend_path)
+
+start_grid_blend_path = f"{bpy.path.abspath('//')}starting_grid_{today}.blend"
+print(f"\nCreate Starting Grid and saving file as: {start_grid_blend_path}")
+
+for i in fileData:
+    iterString = getIterString(int(i['starting_position']))
+    car_base = bpy.data.objects[f'car_base{iterString}']
+    bpy.ops.object.select_all(action='DESELECT')
+    car_base.select_set(True)
+    bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
+
+bpy.ops.wm.save_as_mainfile(filepath=start_grid_blend_path)
+
 
 # print("\nRendering animation")
 # bpy.data.scenes["Scene"].render.filepath = f'{render_dir}/{current_time}/'

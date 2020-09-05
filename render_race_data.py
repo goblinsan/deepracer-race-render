@@ -1,13 +1,21 @@
 import csv
 import json
 import os
+import sys
 import time
 
 import bpy
 from bpy_extras.image_utils import load_image
 
-# argv = sys.argv
-# argv = argv[argv.index("--") + 1:]  # get all args after "--"
+argv = sys.argv
+try:
+    local_args = argv[argv.index("--") + 1:]  # get all args after "--"
+    render_dir = local_args[0]
+except ValueError:
+    local_args = []
+    render_dir = bpy.data.scenes["Scene"].render.filepath
+
+print(render_dir)
 
 current_time = int(round(time.time() * 1000))
 
@@ -177,18 +185,22 @@ for i in fileData:
     total_frames = 24 * car_time
     print("Rendering race data for " + team_name)
 
-    print("Get coordinates plot")
+    print("  Get coordinates plot")
     coords = getRaceCoords(plot_file_path)
 
-    print("Generating Path")
+    print("  Generating Path")
     curve = generatePath(coords, team_position, total_frames)
 
-    print("Generating Car")
+    print("  Generating Car")
     modifyCarAttributes(iterString, car_number, car_color)
 
-    print("Assign car to follow path")
+    print("  Assign car to follow path")
     assignCarToPath(curve, iterString)
 
     if crashed == 'off_track':
-        print("Add explosion to car " + team_name)
+        print("  !!! Add explosion to car " + team_name)
         addExplosion(iterString, total_frames)
+
+print("\nRendering animation")
+bpy.data.scenes["Scene"].render.filepath = f'{render_dir}/{current_time}/'
+bpy.ops.render.render(animation=True)

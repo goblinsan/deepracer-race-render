@@ -2,7 +2,7 @@ import csv
 import json
 import os
 import sys
-import time
+import datetime
 
 import bpy
 from bpy_extras.image_utils import load_image
@@ -15,9 +15,7 @@ except ValueError:
     local_args = []
     render_dir = bpy.data.scenes["Scene"].render.filepath
 
-print(render_dir)
-
-current_time = int(round(time.time() * 1000))
+max_frame = 500
 
 # setup filepath directories to allow script to run in ide or blender
 rel_path = ""
@@ -90,6 +88,11 @@ def generatePath(coords, racer_number, total_frames):
     # update path duration
     crv.path_duration = total_frames
 
+    # check if slowest car
+    global max_frame
+    if(total_frames + 50 > max_frame):
+        max_frame = total_frames + 50
+
     return new_curve
 
 
@@ -130,6 +133,7 @@ def assignCarToPath(curve, iterString):
 
     bpy.context.view_layer.objects.active = curve
     bpy.ops.object.parent_set(type="FOLLOW")
+    #bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
     explode_color = objects['explode-sprite-color' + iterString]
     explode_color.hide_render = True
     explode_shadow = objects['explode-sprite-shadow' + iterString]
@@ -149,7 +153,7 @@ def addExplosion(iterString, total_frames):
 
     bpy.data.particles['destroyCar' + iterString].frame_start = explosion_frame
     bpy.data.particles['destroyCar' + iterString].frame_end = total_frames
-    bpy.data.particles['destroyCar' + iterString].lifetime = 1000
+    bpy.data.particles['destroyCar' + iterString].lifetime = 5000
 
     objects = bpy.data.objects
     explode_color = objects['explode-sprite-color' + iterString]
@@ -201,6 +205,13 @@ for i in fileData:
         print("  !!! Add explosion to car " + team_name)
         addExplosion(iterString, total_frames)
 
-print("\nRendering animation")
-bpy.data.scenes["Scene"].render.filepath = f'{render_dir}/{current_time}/'
-bpy.ops.render.render(animation=True)
+# set animation duration
+bpy.context.scene.frame_end = max_frame
+
+print("\nSaving race blend file as:")
+today = datetime.date.today()
+bpy.ops.wm.save_as_mainfile(filepath=f"{bpy.path.abspath('//')}race_{today}.blend")
+
+# print("\nRendering animation")
+# bpy.data.scenes["Scene"].render.filepath = f'{render_dir}/{current_time}/'
+# bpy.ops.render.render(animation=True)

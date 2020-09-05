@@ -1,11 +1,28 @@
-import os
+import json
 import subprocess
 from pathlib import Path
 
 import yaml
 
 
-def runme():
+def get_best_car():
+    with open("dat_prep/race_data.json") as f:
+        json_file = json.load(f)
+
+    best_car = 0
+    best_time = 1000
+
+    for i in json_file:
+        car_time = i['lap_time']
+        crashed = i['lap_end_state']
+
+        if (crashed != "off_track") and (car_time < best_time):
+            best_car = i['starting_position']
+
+    return best_car
+
+
+def build_blend_files():
     with open("render_setup.yml", "r") as file_in:
         setup_yml = yaml.load(file_in, Loader=yaml.FullLoader)
     exe_path = setup_yml['blender_exe']
@@ -16,4 +33,4 @@ def runme():
 
 
 if __name__ == '__main__':
-    runme()
+    build_blend_files()

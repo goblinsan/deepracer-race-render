@@ -34,7 +34,7 @@ data_prep_path = blend_rel_path + "/data_prep/"
 race_data_path = data_prep_path + "race_data_best_3laps"
 texture_path = blend_rel_path + "/Textures"
 
-with open(race_data_path + f"/race_data.json") as f:
+with open(f"{race_data_path}/race_data.json") as f:
     fileData = json.load(f)
 
 for i in range(len(fileData)):

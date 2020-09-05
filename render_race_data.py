@@ -1,30 +1,38 @@
-import os
-import json
 import csv
-import bpy
+import json
+import os
 import time
+
+import bpy
 from bpy_extras.image_utils import load_image
 
+# argv = sys.argv
+# argv = argv[argv.index("--") + 1:]  # get all args after "--"
+
 current_time = int(round(time.time() * 1000))
-race_num = 4
 
 # setup filepath directories to allow script to run in ide or blender
+rel_path = ""
 blender_script_dir = os.path.dirname(__file__)
 if blender_script_dir.endswith('.blend'):
-    rel_race_data_path = "/../data_prep/race_data"
-else:
-    rel_race_data_path = "/data_prep/race_data"
-race_data_path = blender_script_dir + rel_race_data_path
+    rel_path = "/.."
 
-with open(race_data_path + f"/race_{race_num}_data.json") as f:
+blend_rel_path = blender_script_dir + rel_path
+data_prep_path = blend_rel_path + "/data_prep/"
+race_data_path = data_prep_path + "race_data_best_3laps"
+texture_path = blend_rel_path + "/Textures"
+
+with open(race_data_path + f"/race_data.json") as f:
     fileData = json.load(f)
 
-def getRaceCoords(race, plot_file_path):
-    csv_filepath = blender_script_dir + "/../data_prep/" + plot_file_path
+
+def getRaceCoords(plot_file_path):
+    csv_filepath = data_prep_path + plot_file_path
     with open(csv_filepath) as csvfile:
         reader = csv.reader(csvfile, quoting=csv.QUOTE_NONNUMERIC)
         next(reader, None)
         return list(reader)
+
 
 def getAddedCoordsForStartingPosition(team_position, first_coord):
     max_move_x = 10
@@ -47,6 +55,7 @@ def getAddedCoordsForStartingPosition(team_position, first_coord):
     coord_list.append([second_x, first_y])
     coord_list.append([third_x, first_y])
     return coord_list
+
 
 def generatePath(coords, racer_number, total_frames):
     curve_name = "racer_" + str(racer_number) + "_curve"
@@ -75,24 +84,31 @@ def generatePath(coords, racer_number, total_frames):
 
     return new_curve
 
-def srgb_to_linearrgb(c):
-    if   c < 0:       return 0
-    elif c < 0.04045: return c/12.92
-    else:             return ((c+0.055)/1.055)**2.4
 
-def hex_to_rgb(h,alpha=1):
+def srgb_to_linearrgb(c):
+    if c < 0:
+        return 0
+    elif c < 0.04045:
+        return c / 12.92
+    else:
+        return ((c + 0.055) / 1.055) ** 2.4
+
+
+def hex_to_rgb(h, alpha=1):
     r = (h & 0xff0000) >> 16
     g = (h & 0x00ff00) >> 8
     b = (h & 0x0000ff)
-    return tuple([srgb_to_linearrgb(c/0xff) for c in (r,g,b)] + [alpha])
+    return tuple([srgb_to_linearrgb(c / 0xff) for c in (r, g, b)] + [alpha])
 
 
 def modifyCarAttributes(iterString, car_number, car_color):
     # update number
-    numberImage = load_image("D:\\deepRacer\\deepRacer-race-render\\deepracer-race-render\\Textures\\generated\\car_number-assets\\car_number_" + str(car_number) +".png")
+    car_num_path = "/generated/car_number-assets/car_number_"
+    numberImage = load_image(texture_path + car_num_path + str(car_number) + ".png")
     bpy.data.materials['car_material' + iterString].node_tree.nodes['car_number'].image = numberImage
     # update color
-    bpy.data.materials['car_material' + iterString].node_tree.nodes['car_color'].outputs[0].default_value = hex_to_rgb(int(car_color, 16))
+    bpy.data.materials['car_material' + iterString].node_tree.nodes['car_color'].outputs[0].default_value = hex_to_rgb(
+        int(car_color, 16))
 
 
 def assignCarToPath(curve, iterString):
@@ -110,16 +126,15 @@ def assignCarToPath(curve, iterString):
     explode_color.hide_render = True
     explode_shadow = objects['explode-sprite-shadow' + iterString]
     explode_shadow.hide_render = True
-    
 
 
 def setExplodeVisibilityKeyframes(sprite, start_frame):
     sprite.keyframe_insert('hide_render')
     sprite.hide_render = False
-    sprite.keyframe_insert('hide_render', frame = start_frame)
+    sprite.keyframe_insert('hide_render', frame=start_frame)
     sprite.hide_render = True
-    sprite.keyframe_insert('hide_render', frame = start_frame + 160)
-    
+    sprite.keyframe_insert('hide_render', frame=start_frame + 160)
+
 
 def addExplosion(iterString, total_frames):
     explosion_frame = total_frames - 5
@@ -127,22 +142,26 @@ def addExplosion(iterString, total_frames):
     bpy.data.particles['destroyCar' + iterString].frame_start = explosion_frame
     bpy.data.particles['destroyCar' + iterString].frame_end = total_frames
     bpy.data.particles['destroyCar' + iterString].lifetime = 1000
-    
+
     objects = bpy.data.objects
     explode_color = objects['explode-sprite-color' + iterString]
     setExplodeVisibilityKeyframes(explode_color, explosion_frame)
     explode_shadow = objects['explode-sprite-shadow' + iterString]
     explode_shadow.constraints['Locked Track'].target = objects['track-sun']
     setExplodeVisibilityKeyframes(explode_shadow, explosion_frame)
-    
-    bpy.data.materials['explosion' + iterString].node_tree.nodes['sprite-texture'].image_user.frame_start = explosion_frame
-    bpy.data.materials['explosion_shadow' + iterString].node_tree.nodes['sprite-texture'].image_user.frame_start = explosion_frame
-    
+
+    bpy.data.materials['explosion' + iterString].node_tree.nodes[
+        'sprite-texture'].image_user.frame_start = explosion_frame
+    bpy.data.materials['explosion_shadow' + iterString].node_tree.nodes[
+        'sprite-texture'].image_user.frame_start = explosion_frame
 
 
 for i in range(len(fileData)):
     # add cars to scene
-    bpy.ops.wm.append(directory="D:\\deepRacer\\deepRacer-race-render\\deepracer-race-render\\race_car.blend\\Collection\\", link=False, filename="race_car")
+    car_collection_path = blend_rel_path + "/race_car.blend/Collection"
+    bpy.ops.wm.append(
+        directory=car_collection_path,
+        link=False, filename="race_car")
 
 for i in fileData:
     team_position = int(i['starting_position'])
@@ -159,7 +178,7 @@ for i in fileData:
     print("Rendering race data for " + team_name)
 
     print("Get coordinates plot")
-    coords = getRaceCoords(f"race_{race_num}", plot_file_path)
+    coords = getRaceCoords(plot_file_path)
 
     print("Generating Path")
     curve = generatePath(coords, team_position, total_frames)
@@ -173,4 +192,3 @@ for i in fileData:
     if crashed == 'off_track':
         print("Add explosion to car " + team_name)
         addExplosion(iterString, total_frames)
-

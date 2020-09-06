@@ -9,7 +9,7 @@ def get_best_car():
     with open("dat_prep/race_data.json") as f:
         json_file = json.load(f)
 
-    best_car = 0
+    best_car_csv = ''
     best_time = 1000
 
     for i in json_file:
@@ -17,9 +17,9 @@ def get_best_car():
         crashed = i['lap_end_state']
 
         if (crashed != "off_track") and (car_time < best_time):
-            best_car = i['starting_position']
+            best_car_csv = i['plot_file']
 
-    return best_car
+    return best_car_csv
 
 
 def build_blend_files():

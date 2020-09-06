@@ -91,7 +91,8 @@ if __name__ == '__main__':
     frame_markers = convert_markers_to_frames(coord_markers, best_time, len(coords))
     print(frame_markers)
 
-# total_time * 24 / num_points = frames per point
+
+#[21, 48, 74, 98, 145, 209, 228, 300, 329, 353, 397, 463, 488, 557, 586, 606, 654, 717]
 
 # bpy.ops.nla.action_pushdown(channel_index=9)
 

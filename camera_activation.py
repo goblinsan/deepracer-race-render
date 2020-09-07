@@ -1,6 +1,5 @@
 import csv
 import json
-import bpy
 
 
 def create_zone(id, min_x, max_x, min_y, max_y):
@@ -88,53 +87,26 @@ def get_coord_markers(coords, tot_time, zones):
     return marker_map
 
 
-def adjust_key_for_range(existing_frame, old_range, new_range):
-    old_corrected_range = old_range[1] - old_range[0]
-    new_corrected_range = new_range[1] - new_range[0]
-    corrected_start_value = existing_frame - old_range[0]
-    percentage = (corrected_start_value * 100) / old_corrected_range
-    return (percentage * new_corrected_range / 100) + new_range[0]
+def get_render_commands(markers, cam_rules):
+    command_stub = '[exe_path, "--background", "race_2020-09-06.blend", "--python", "position_camera.py", "--", render_path, '
+    render_commands = []
+    start_frame_padding = 24
+    end_frame_padding = 50
 
+    for cam_rule in cam_rules:
+        cam_name = cam_rule['name']
+        rule = cam_rule['rule']
+        for i in range(1, 4):
+            start_frame = markers[i][rule[0][1]][rule[0][0]]
+            start_frame = max(1, start_frame - start_frame_padding)
+            end_frame = markers[i][rule[1][1]][rule[1][0]]
+            end_frame = end_frame + end_frame_padding
+            render_commands.append(f'{command_stub} {cam_name} ({start_frame}, {end_frame})]')
 
-def setup_camera_frames(name, key_range):
-    print(f"actions for camera {name}")
-    cam = bpy.data.objects[name]
-    cam_action_data = cam.animation_data.action
-
-    for g in cam_action_data.groups:
-        channel_data = {}
-        for channel in g.channels:
-            old_keys = []
-            for k in channel.keyframe_points:
-                old_keys.append(k)
-
-            channel_data[f'{channel.data_path}|{channel.array_index}'] = old_keys
-            cam_action_data.fcurves.remove(channel)
-
-        for key in channel_data:
-            key_parts = key.split("|")
-            new_fcurve = cam_action_data.fcurves.new(key_parts[0], index=int(key_parts[1]), action_group=g.name)
-            old_channel = channel_data[key]
-
-            keyframe_start = new_fcurve.keyframe_points.insert(key_range[0], old_channel[0].co[1], keyframe_type='KEYFRAME')
-            keyframe_start.easing = 'EASE_IN'
-
-            if len(old_channel) > 2:
-                old_min = old_channel[0].co[0]
-                old_max = old_channel[-1].co[0]
-                for mid_key in old_channel[1:-1]:
-                    new_frame = adjust_key_for_range(mid_key.co[0], [old_min, old_max], key_range)
-                    new_fcurve.keyframe_points.insert(new_frame, mid_key.co[1], keyframe_type='KEYFRAME')
-
-            keyframe_end = new_fcurve.keyframe_points.insert(key_range[1], old_channel[-1].co[1], keyframe_type='KEYFRAME')
-            keyframe_end.easing = 'EASE_OUT'
+    return render_commands
 
 
 if __name__ == '__main__':
-
-    # new_frame = adjust_key_for_range(160, [100, 200], [200, 300])
-    #[21, 48, 74, 98, 145, 209, 228, 300, 329, 353, 397, 463, 488, 557, 586, 606, 654, 717]
-
     best_csv, best_time = get_best_car()
     coords = get_race_coords(f"data_prep/{best_csv}")
 
@@ -150,20 +122,20 @@ if __name__ == '__main__':
     coord_markers = get_coord_markers(coords, best_time, zone_list + zone_list + zone_list)
     print(coord_markers[1][1]['enter'])
 
+    # rules for activating cameras
+    # cam 01 exit zone 1, exit zone 2
+    # cam 02 enter zone 2, exit zone 4
+    # cam 03 enter zone 3, enter zone 5
+    # cam 04 enter zone 5, exit zone 5
+    # cam 05 enter zone 5, enter zone 6
+    # cam 06 exit zone 5, exit zone 6
 
-# frames = [21, 48, 74, 98, 145, 209, 228, 300, 329, 353, 397, 463, 488, 557, 586, 606, 654, 717]
-#
-# setup_camera_frames('01_race_start_cam', frames[0:2])
-# setup_camera_frames('02_turn_1_close_cam', [frames[1], 150])
-# setup_camera_frames('03_start_sbend', frames[2:4])
-# setup_camera_frames('04_thru_sbend', frames[3:5])
-# setup_camera_frames('05_back_corner', frames[4:6])
-# setup_camera_frames('06_last_turn', frames[5:7])
-
-# cam 01 exit zone 1, exit zone 2
-# cam 02 enter zone 2, exit zone 4
-# cam 03 enter zone 3, enter zone 5
-# cam 04 enter zone 5, exit zone 5
-# cam 05 enter zone 5, enter zone 6
-# cam 06 exit zone 5, exit zone 6
-
+    camera_01 = {'name': '01_race_start_cam', 'rule': [("exit", 1), ("exit", 2)]}
+    camera_02 = {'name': '02_turn_1_close_cam', 'rule': [("enter", 2), ("exit", 4)]}
+    camera_03 = {'name': '03_start_sbend', 'rule': [("enter", 3), ("enter", 5)]}
+    camera_04 = {'name': '04_thru_sbend', 'rule': [("enter", 5), ("exit", 5)]}
+    camera_05 = {'name': '05_back_corner', 'rule': [("enter", 5), ("enter", 6)]}
+    camera_06 = {'name': '06_last_turn', 'rule': [("exit", 5), ("exit", 6)]}
+    exec_commands = get_render_commands(coord_markers,
+                                        [camera_01, camera_02, camera_03, camera_04, camera_05, camera_06])
+    print(exec_commands)

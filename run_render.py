@@ -51,11 +51,13 @@ def build_camera_blends():
     exec_args = camera_activation.get_camera_action_frames(coord_markers,
                                                            [camera_01, camera_02, camera_03, camera_04, camera_05,
                                                             camera_06])
+    last_mapped_frame = exec_args[-1]
+    exec_args.append(['07_race_clean_up', str(last_mapped_frame[-1]), str(int(last_mapped_frame[-1]) + 300)])
 
     files_to_render = []
     for i, args in enumerate(exec_args):
         print(f'running: {args}')
-        render_blend_file = f'race_{today}_{i + 1}.blend'
+        render_blend_file = f'race_{today}_cam_{i + 1}.blend'
         files_to_render.append(render_blend_file)
         copyfile(blend_file, render_blend_file)
         subprocess.run([exe_path, "--background", render_blend_file, "--python", "position_camera.py", "--",

@@ -89,7 +89,6 @@ def get_coord_markers(coords, tot_time, zones):
 
 def get_camera_action_frames(markers, cam_rules):
     camera_actions = []
-    start_frame_padding = 24
     end_frame_padding = 50
 
     for cam_rule in cam_rules:
@@ -97,7 +96,6 @@ def get_camera_action_frames(markers, cam_rules):
         rule = cam_rule['rule']
         for i in range(1, 4):
             start_frame = markers[i][rule[0][1]][rule[0][0]]
-            start_frame = max(1, start_frame - start_frame_padding)
             end_frame = markers[i][rule[1][1]][rule[1][0]]
             end_frame = end_frame + end_frame_padding
             camera_actions.append([cam_name, str(start_frame), str(end_frame)])

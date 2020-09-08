@@ -44,6 +44,7 @@ def setup_camera_frames(name, key_range):
 
             channel_data[f'{channel.data_path}|{channel.array_index}'] = old_keys
             cam_action_data.fcurves.remove(channel)
+            old_keys = None
 
         for key in channel_data:
             key_parts = key.split("|")
@@ -71,8 +72,10 @@ cam = bpy.data.objects[cam_name]
 cam.select_set(True)
 bpy.data.scenes["Scene"].camera = cam
 bpy.data.scenes["Scene"].frame_start = start_frame
-bpy.data.scenes["Scene"].frame_end = end_frame
+if not cam_name == '07_race_clean_up':
+    bpy.data.scenes["Scene"].frame_end = end_frame
+
+# bpy.data.scenes["Scene"].frame_end = start_frame + 2
+
 bpy.data.scenes["Scene"].render.filepath = f'{render_dir}/{cam_name}/{timestamp}/'
 bpy.ops.wm.save_as_mainfile(filepath=bpy.data.filepath)
-# time.sleep(10)
-# bpy.ops.render.render(animation=True)

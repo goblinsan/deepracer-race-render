@@ -72,10 +72,10 @@ cam = bpy.data.objects[cam_name]
 cam.select_set(True)
 bpy.data.scenes["Scene"].camera = cam
 bpy.data.scenes["Scene"].frame_start = start_frame
-if not cam_name == '07_race_clean_up':
-    bpy.data.scenes["Scene"].frame_end = end_frame
+# if not cam_name == '07_race_clean_up':
+#     bpy.data.scenes["Scene"].frame_end = end_frame
 
-# bpy.data.scenes["Scene"].frame_end = start_frame
+bpy.data.scenes["Scene"].frame_end = start_frame
 
 bpy.data.scenes["Scene"].render.filepath = f'{render_dir}/{cam_name}/{timestamp}/'
 bpy.ops.wm.save_as_mainfile(filepath=bpy.data.filepath)

@@ -54,6 +54,10 @@ def build_camera_blends():
     last_mapped_frame = exec_args[-1]
     exec_args.append(['07_race_clean_up', str(last_mapped_frame[-1]), str(int(last_mapped_frame[-1]) + 300)])
 
+    with open("render_list.txt", "w") as text_file:
+        for a in exec_args:
+            print(a, file=text_file)
+
     files_to_render = []
     for i, args in enumerate(exec_args):
         print(f'running: {args}')

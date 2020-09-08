@@ -87,9 +87,8 @@ def get_coord_markers(coords, tot_time, zones):
     return marker_map
 
 
-def get_render_commands(markers, cam_rules):
-    command_stub = '[exe_path, "--background", "race_2020-09-06.blend", "--python", "position_camera.py", "--", render_path, '
-    render_commands = []
+def get_camera_action_frames(markers, cam_rules):
+    camera_actions = []
     start_frame_padding = 24
     end_frame_padding = 50
 
@@ -101,9 +100,9 @@ def get_render_commands(markers, cam_rules):
             start_frame = max(1, start_frame - start_frame_padding)
             end_frame = markers[i][rule[1][1]][rule[1][0]]
             end_frame = end_frame + end_frame_padding
-            render_commands.append(f'{command_stub} {cam_name} ({start_frame}, {end_frame})]')
+            camera_actions.append([cam_name, str(start_frame), str(end_frame)])
 
-    return render_commands
+    return camera_actions
 
 
 if __name__ == '__main__':
@@ -120,7 +119,6 @@ if __name__ == '__main__':
     zone_list = [zone_1, zone_2, zone_3, zone_4, zone_5, zone_6]
 
     coord_markers = get_coord_markers(coords, best_time, zone_list + zone_list + zone_list)
-    print(coord_markers[1][1]['enter'])
 
     # rules for activating cameras
     # cam 01 exit zone 1, exit zone 2
@@ -136,6 +134,8 @@ if __name__ == '__main__':
     camera_04 = {'name': '04_thru_sbend', 'rule': [("enter", 5), ("exit", 5)]}
     camera_05 = {'name': '05_back_corner', 'rule': [("enter", 5), ("enter", 6)]}
     camera_06 = {'name': '06_last_turn', 'rule': [("exit", 5), ("exit", 6)]}
-    exec_commands = get_render_commands(coord_markers,
-                                        [camera_01, camera_02, camera_03, camera_04, camera_05, camera_06])
-    print(exec_commands)
+    blender_exe = "C:\\Program Files\\Blender Foundation\\Blender 2.90\\blender.exe"
+    exec_commands = get_camera_action_frames(coord_markers,
+                                             [camera_01, camera_02, camera_03, camera_04, camera_05, camera_06])
+
+

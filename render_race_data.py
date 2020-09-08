@@ -16,10 +16,10 @@ import car_explosions
 argv = sys.argv
 try:
     local_args = argv[argv.index("--") + 1:]  # get all args after "--"
-    render_dir = local_args[0]
+    today = local_args[0]
 except ValueError:
     local_args = []
-    render_dir = bpy.data.scenes["Scene"].render.filepath
+    today = datetime.date.today()
 
 max_frame = 500
 
@@ -81,7 +81,6 @@ for i in fileData:
 bpy.context.scene.frame_end = max_frame
 
 # save generated race blend file
-today = datetime.date.today()
 race_blend_path = f"{bpy.path.abspath('//')}race_{today}.blend"
 print(f"\nSaving race blend file as: {race_blend_path}")
 bpy.ops.wm.save_as_mainfile(filepath=race_blend_path)
@@ -100,6 +99,3 @@ for i in fileData:
 bpy.ops.wm.save_as_mainfile(filepath=start_grid_blend_path)
 
 
-# print("\nRendering animation")
-# bpy.data.scenes["Scene"].render.filepath = f'{render_dir}/{current_time}/'
-# bpy.ops.render.render(animation=True)

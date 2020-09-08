@@ -233,14 +233,23 @@ def generate_3_lap_race( race_data ):
         else:
            keep_lap = min(last_complete_lap.race_number.max()+1,3)
         one_race_team_data = one_race_team_data[one_race_team_data.race_number <= keep_lap]    
-        loc_data = one_race_team_data[['x-coordinate', 'y-coordinate']]
+        loc_data = one_race_team_data[['x-coordinate', 'y-coordinate','race_number','step']]
         loc_data = loc_data.rename(columns={"x-coordinate": "x", "y-coordinate": "y"})
+        #Smooth the start-finish line pass
+        curr_x = loc_data.loc[0, 'x']
+        
+        for i in range(10, len(loc_data)-1):
+            if (loc_data.loc[i, 'race_number'] != loc_data.loc[i+1, 'race_number']):
+              curr_x = loc_data.loc[i, 'x']
+            elif ( loc_data.loc[i, 'step'] < 20 and curr_x > loc_data.loc[i, 'x'] ):
+              loc_data.loc[i, 'x'] = curr_x
+        loc_data = loc_data[['x', 'y']]
         loc_data.to_csv(path.join(race_data_path,race_data_file), header=False, index=False)
         one_race_team_data_lap = one_race_team_data[["team","start_pos","car_no",
                                                      "color","lap_end_state",
                                                      "lap_progress","lap_time"
                                                       ]].copy().drop_duplicates()
-        print(one_race_team_data_lap)
+        
         race_team_json = { "team": team,
                                "starting_position" : int(one_race_team_data_lap.loc[0, 'start_pos']),
                                "car_no" : one_race_team_data_lap.loc[0, 'car_no'],
@@ -251,13 +260,13 @@ def generate_3_lap_race( race_data ):
                                "plot_file" : f"{race_data_path}/{race_data_file}"
                              }
         race_json.append(race_team_json)
-        print(race_team_json)
+        
     with open(path.join("race_data_best_3laps",f'race_data.json'), 'w') as fp:
         json.dump(race_json, fp, sort_keys=False, indent=2)
 
 
 def generate_leaderboard_3lap( race_data ):
-    print(f"Generate 3Lap Summary")
+    print(f"Generate 3 Lap Summary")
     race_data_path = "race_data_best_3laps"
     makedirs(race_data_path, exist_ok=True) 
 
@@ -276,8 +285,7 @@ def generate_leaderboard_3lap( race_data ):
     race = pd.merge(all_teams,lap1,on=["team","car_no"],how="outer")
     race = pd.merge(race,lap2,on=["team","car_no"],how="outer")
     race = pd.merge(race,lap3,on=["team","car_no"],how="outer")
-    print(race)
-
+    
     race["lap_total"] = race["lap1_time"]+race["lap2_time"]+race["lap3_time"]
     race["lap_average"] = race["lap_total"] / 3.0
     race["best2lap"] = race["lap1_time"]+race["lap2_time"]

@@ -57,7 +57,7 @@ def build_camera_blends():
     files_to_render = []
     for i, args in enumerate(exec_args):
         print(f'running: {args}')
-        render_blend_file = f'race_{today}_cam_{i + 1}.blend'
+        render_blend_file = f'race_{today}_camera_{i + 1}.blend'
         files_to_render.append(render_blend_file)
         copyfile(blend_file, render_blend_file)
         subprocess.run([exe_path, "--background", render_blend_file, "--python", "position_camera.py", "--",

@@ -12,8 +12,8 @@ def create_zone(id, min_x, max_x, min_y, max_y):
     }
 
 
-def get_best_car():
-    with open("data_prep/race_data_best_3laps/race_data.json") as f:
+def get_best_car(data_path="data_prep/race_data_best_3laps/race_data.json"):
+    with open(data_path) as f:
         json_file = json.load(f)
 
     best_car_csv = ''
@@ -103,37 +103,20 @@ def get_camera_action_frames(markers, cam_rules):
     return camera_actions
 
 
-if __name__ == '__main__':
-    best_csv, best_time = get_best_car()
-    coords = get_race_coords(f"data_prep/{best_csv}")
+def get_camera_action_frames_dic(markers, cam_rules):
+    camera_actions = {}
+    end_frame_padding = 50
 
-    # max and min of activation zones in blend file - see get_max_min.py
-    zone_1 = create_zone(1, 2.2383158206939697, 3.514540433883667, 0.028154075145721436, 1.2572650909423828)
-    zone_2 = create_zone(2, 5.38928747177124, 6.248302936553955, 0.028154075145721436, 1.2572650909423828)
-    zone_3 = create_zone(3, 6.485426902770996, 7.8031110763549805, 1.364519476890564, 2.355942487716675)
-    zone_4 = create_zone(4, 5.544686794281006, 6.403702259063721, 2.0969109535217285, 3.326022148132324)
-    zone_5 = create_zone(5, 0.31292879581451416, 3.658247947692871, 3.757744073867798, 4.9868550300598145)
-    zone_6 = create_zone(6, 0.42658960819244385, 1.9064496755599976, 0.8830092549324036, 2.189504861831665)
-    zone_list = [zone_1, zone_2, zone_3, zone_4, zone_5, zone_6]
+    for cam_rule in cam_rules:
+        cam_name = cam_rule['name']
+        rule = cam_rule['rule']
+        lap_frames = []
+        for i in range(1, 4):
+            start_frame = markers[i][rule[0][1]][rule[0][0]]
+            end_frame = markers[i][rule[1][1]][rule[1][0]]
+            end_frame = end_frame + end_frame_padding
+            lap_frames.append([start_frame, end_frame])
+        camera_actions[cam_name] = lap_frames
 
-    coord_markers = get_coord_markers(coords, best_time, zone_list + zone_list + zone_list)
-
-    # rules for activating cameras
-    # cam 01 exit zone 1, exit zone 2
-    # cam 02 enter zone 2, exit zone 4
-    # cam 03 enter zone 3, enter zone 5
-    # cam 04 enter zone 5, exit zone 5
-    # cam 05 enter zone 5, enter zone 6
-    # cam 06 exit zone 5, exit zone 6
-
-    camera_01 = {'name': '01_race_start_cam', 'rule': [("exit", 1), ("exit", 2)]}
-    camera_02 = {'name': '02_turn_1_close_cam', 'rule': [("enter", 2), ("exit", 4)]}
-    camera_03 = {'name': '03_start_sbend', 'rule': [("enter", 3), ("enter", 5)]}
-    camera_04 = {'name': '04_thru_sbend', 'rule': [("enter", 5), ("exit", 5)]}
-    camera_05 = {'name': '05_back_corner', 'rule': [("enter", 5), ("enter", 6)]}
-    camera_06 = {'name': '06_last_turn', 'rule': [("exit", 5), ("exit", 6)]}
-    blender_exe = "C:\\Program Files\\Blender Foundation\\Blender 2.90\\blender.exe"
-    exec_commands = get_camera_action_frames(coord_markers,
-                                             [camera_01, camera_02, camera_03, camera_04, camera_05, camera_06])
-
+    return camera_actions
 

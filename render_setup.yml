@@ -1,2 +1,3 @@
 blender_exe: C:\Program Files\Blender Foundation\Blender 2.90\blender.exe
 render_out_dir: D:\deepRacer\renders
+start_render: False

@@ -2,14 +2,9 @@ import json
 import os
 import sys
 import datetime
-import threading
-import time
 
 import bpy
 
-
-progress = 0
-result_available = threading.Event()
 
 def getIterString(team_position):
     iterString = ''
@@ -59,8 +54,8 @@ def setup_camera_animations(race_json, data_prep_path):
     return camera_action_frames
 
 
-def create_render_list_txt(camera_action_frames):
-    with open("render_list.json", "w") as text_file:
+def create_render_list_txt(camera_action_frames, today):
+    with open(f"render_list_{today}.json", "w") as text_file:
         print("{", file=text_file)
         print(f'  "00_starting_line_cam": [[0, 40]],', file=text_file)
         for a in camera_action_frames:
@@ -97,7 +92,7 @@ def apply_race_data_to_car(data_prep_path, file_data, max_frame, texture_path):
         curve, max_frame = car_path.generatePath(coords, car_data['team_position'], car_data['total_frames'],
                                                  len(file_data), max_frame)
         car_customize.modifyCarAttributes(texture_path, car_data['iterString'], car_data['car_number'],
-                                          car_data['car_color'])
+                                          car_data['car_color'], car_data['team_name'])
         car_path.assignCarToPath(curve, car_data['iterString'])
 
         if car_data['crashed'] == 'off_track':
@@ -106,10 +101,10 @@ def apply_race_data_to_car(data_prep_path, file_data, max_frame, texture_path):
     return max_frame
 
 
-def camera_animation_builder(data_prep_path, race_json):
+def camera_animation_builder(data_prep_path, race_json, today):
     # setup camera animations
     camera_action_frames = setup_camera_animations(race_json, data_prep_path)
-    create_render_list_txt(camera_action_frames)
+    create_render_list_txt(camera_action_frames, today)
     for key in camera_action_frames:
         cam = bpy.data.objects[key]
         position_camera.setup_camera_frames(cam, camera_action_frames[key])
@@ -142,7 +137,7 @@ def scene_setup():
     bpy.context.scene.frame_end = max_frame
 
     # setup cameras
-    camera_animation_builder(data_prep_path, race_json)
+    camera_animation_builder(data_prep_path, race_json, today)
 
     # save generated race blend file
     race_blend_path = f"{bpy.path.abspath('//')}race_{today}.blend"

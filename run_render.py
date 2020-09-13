@@ -15,17 +15,19 @@ if __name__ == '__main__':
         setup_yml = yaml.load(file_in, Loader=yaml.FullLoader)
     exe_path = setup_yml['blender_exe']
     render_path = setup_yml['render_out_dir']
+    start_render = setup_yml['start_render']
     Path(render_path).mkdir(parents=True, exist_ok=True)
     today = datetime.date.today()
 
     build_blend_files()
 
-    with open("render_list.json", "r") as render_list_file:
+    with open(f"render_list_{today}.json", "r") as render_list_file:
         render_instructions = json.load(render_list_file)
 
     for camera_name, cam_frames in render_instructions.items():
         print(f'{camera_name} : frames {cam_frames}')
 
-        for frame_set in cam_frames:
-            subprocess.run([exe_path, "-b", f'race_{today}.blend', "--python", "render_instructions.py",  "--"
-                            , f'{render_path}', f'{today}', f'{camera_name}', f'{frame_set[0]}', f'{frame_set[1]}'])
+        if start_render:
+            for frame_set in cam_frames:
+                subprocess.run([exe_path, "-b", f'race_{today}.blend', "--python", "render_instructions.py", "--",
+                                f'{render_path}', f'{today}', f'{camera_name}', f'{frame_set[0]}', f'{frame_set[1]}'])

@@ -136,6 +136,14 @@ def scene_setup():
     # set animation duration
     bpy.context.scene.frame_end = max_frame
 
+    # bake particle collisions for exploding cars
+    for scene in bpy.data.scenes:
+        for object in scene.objects:
+            for modifier in object.modifiers:
+                if modifier.name.startswith("destroyCar"):
+                    bpy.ops.ptcache.bake_all(bake=True)
+                    break
+
     # setup cameras
     camera_animation_builder(data_prep_path, race_json, today)
 

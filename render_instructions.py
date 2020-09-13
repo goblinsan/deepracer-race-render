@@ -21,7 +21,13 @@ bpy.data.scenes["Scene"].frame_start = start_frame
 if not cam_name == '07_race_clean_up':
     bpy.data.scenes["Scene"].frame_end = end_frame
 
+# uncomment the following for quick 1 frame tests
 # bpy.data.scenes["Scene"].frame_end = start_frame
+
+# point explosion animation at camera
+for obj in bpy.context.scene.objects:
+    if obj.name.startswith("explode_sprite_color"):
+        obj.constraints["Locked Track"].target = cam
 
 bpy.data.scenes["Scene"].render.filepath = f'{render_dir}/{today}/{cam_name}/{start_frame}_{end_frame}/'
 

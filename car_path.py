@@ -76,7 +76,8 @@ def assignCarToPath(curve, iterString):
 
     bpy.context.view_layer.objects.active = curve
     bpy.ops.object.parent_set(type="FOLLOW")
-    explode_color = objects['explode-sprite-color' + iterString]
+    explode_color = objects['explode_sprite_color' + iterString]
     explode_color.hide_render = True
-    explode_shadow = objects['explode-sprite-shadow' + iterString]
+    explode_shadow = objects['explode_sprite_shadow' + iterString]
     explode_shadow.hide_render = True
+

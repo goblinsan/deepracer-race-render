@@ -17,9 +17,9 @@ def addExplosion(iterString, total_frames):
     bpy.data.particles['destroyCar' + iterString].lifetime = 5000
 
     objects = bpy.data.objects
-    explode_color = objects['explode-sprite-color' + iterString]
+    explode_color = objects['explode_sprite_color' + iterString]
     setExplodeVisibilityKeyframes(explode_color, explosion_frame)
-    explode_shadow = objects['explode-sprite-shadow' + iterString]
+    explode_shadow = objects['explode_sprite_shadow' + iterString]
     explode_shadow.constraints['Locked Track'].target = objects['track-sun']
     setExplodeVisibilityKeyframes(explode_shadow, explosion_frame)
 

@@ -110,6 +110,14 @@ def camera_animation_builder(data_prep_path, race_json, today):
         position_camera.setup_camera_frames(cam, camera_action_frames[key])
 
 
+def add_viz_toggle_keyframes(banner_obj, start_car_intro, end_car_intro):
+    banner_obj.hide_render = False
+    banner_obj.keyframe_insert('hide_render', frame=start_car_intro)
+    banner_obj.keyframe_insert('hide_render', frame=start_car_intro - 1)
+    banner_obj.hide_render = True
+    banner_obj.keyframe_insert('hide_render', frame=end_car_intro)
+
+
 def scene_setup():
     argv = sys.argv
     try:
@@ -156,13 +164,37 @@ def scene_setup():
     start_grid_blend_path = f"{bpy.path.abspath('//')}starting_grid_{today}.blend"
     print(f"\nCreate Starting Grid and saving file as: {start_grid_blend_path}")
 
+    num_racers = len(file_data)
     for racer in file_data:
-        iterString = getIterString(int(racer['starting_position']))
+        i = int(racer['starting_position'])
+        iterString = getIterString(i)
         car_base = bpy.data.objects[f'car_base{iterString}']
         bpy.ops.object.select_all(action='DESELECT')
         car_base.select_set(True)
         bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
+        car_base.modifiers.clear()
+        # setup banner visibility animations
+        offset = 120
+        end_animation_frame = 600
+        frame_per_car = (end_animation_frame - offset)/num_racers
+        start_car_intro = (i * frame_per_car) + offset
+        end_car_intro = ((i+1) * frame_per_car) + offset - 5
+        add_viz_toggle_keyframes(bpy.data.objects['banner_bg' + iterString], start_car_intro, end_car_intro)
+        add_viz_toggle_keyframes(bpy.data.objects['banner_bg_white' + iterString], start_car_intro, end_car_intro)
+        add_viz_toggle_keyframes(bpy.data.objects['banner_number' + iterString], start_car_intro, end_car_intro)
+        add_viz_toggle_keyframes(bpy.data.objects['team_name' + iterString], start_car_intro, end_car_intro)
+        add_viz_toggle_keyframes(bpy.data.objects['team_name_depth' + iterString], start_car_intro, end_car_intro)
+        #delete any explosions
+        objs = [bpy.data.objects['explode_sprite_color' + iterString], bpy.data.objects['explode_sprite_shadow' + iterString]]
+        bpy.ops.object.delete({"selected_objects": objs})
 
+    for obj in bpy.context.scene.objects:
+        if obj.name.startswith("explode_sprite_color"):
+            bpy.ops.object.select_all(action='DESELECT')
+            obj.select_set(True)
+            bpy.context.active_object.animation_data_clear()
+
+    bpy.data.scenes['Scene'].frame_end = 900
     bpy.ops.wm.save_as_mainfile(filepath=start_grid_blend_path)
 
 

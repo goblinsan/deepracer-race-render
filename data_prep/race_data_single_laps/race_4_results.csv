@@ -8,3 +8,5 @@ Place,race_number,team,car_no,lap_end_state,lap_progress,lap_time,Delta
 7,4,BlueStreak,05,off_track,94.7456,11.684227705001831,
 8,4,RB,99,off_track,55.1129,6.134896755218506,
 9,4,T Minus 10,10,off_track,47.7235,5.79868483543396,
+10,4,Artificial Racer,88,off_track,38.1327,4.222985506057739,
+11,4,Lightning McQueen,95,off_track,29.6201,3.9150195121765137,

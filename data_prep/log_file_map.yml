@@ -61,3 +61,17 @@
   start_pos: 8
   sandbox: 003
   model: BlueStreak-Chris-101-training5  
+- team: Lightning McQueen
+  logfile: LightingMcQueen-Model11-clone.log
+  car: 95
+  color: 0xff2410
+  start_pos: 9
+  sandbox: 002
+  model: LightingMcQueen-Model11-clone 
+- team: Artificial Racer
+  logfile: ArtificialRacers-S3p2T26D-5b.log
+  car: 88
+  color: 0x10C42E
+  start_pos: 10
+  sandbox: 000
+  model: ArtificialRacers-S3p2T26D-5b  

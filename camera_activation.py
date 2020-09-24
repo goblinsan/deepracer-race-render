@@ -18,15 +18,30 @@ def get_best_car(data_path="data_prep/race_data_best_3laps/race_data.json"):
 
     best_car_csv = ''
     best_time = 1000
+    best_progress = 0
+    best_progress_csv = ''
+    best_progress_time = 1000
 
     for i in json_file:
         car_time = i['lap_time']
         crashed = i['lap_end_state']
+        car_progress =  i['lap_progress']
 
         if (crashed != "off_track") and (car_time < best_time):
             best_time = car_time
             best_car_csv = i['plot_file']
 
+        if (car_progress > best_progress):
+            best_progress = car_progress
+            best_progress_csv = i['plot_file']
+            best_progress_time = car_time
+    
+    # Edge case: no car finishes
+    if len(best_car_csv) < 2:
+        best_car_csv = best_progress_csv
+        best_time = best_progress_time
+    
+    print(f"Best Car: {best_car_csv}" )
     return best_car_csv, best_time
 
 
@@ -66,21 +81,21 @@ def get_coord_markers(coords, tot_time, zones):
     for z, zone in enumerate(zones):
         if z % 6 == 0:
             lap += 1
-            while is_coord_in_zone(coords[i], zone):
+            while i < len(coords) and is_coord_in_zone(coords[i], zone):
                 i += 1
             marker_map[lap] = {}
             marker_map[lap][zone["id"]] = {}
             marker_map[lap][zone["id"]]["exit"] = round(i * frames_per_point)
         else:
-            while not is_coord_in_zone(coords[i], zone):
+            while i < len(coords) and not is_coord_in_zone(coords[i], zone):
                 i += 1
             marker_map[lap][zone["id"]] = {}
             marker_map[lap][zone["id"]]["enter"] = round(i * frames_per_point)
-            while is_coord_in_zone(coords[i], zone):
+            while i < len(coords) and is_coord_in_zone(coords[i], zone):
                 i += 1
             marker_map[lap][zone["id"]]["exit"] = round(i * frames_per_point)
             if z % 6 == 5:
-                while not is_coord_in_zone(coords[i], zones[0]):
+                while i < len(coords) and not is_coord_in_zone(coords[i], zones[0]):
                     i += 1
                 marker_map[lap][zones[0]["id"]]["enter"] = round(i * frames_per_point)
 

@@ -133,14 +133,17 @@ def process_team_log_file( team, new_style_log = False ):
 
     return dr_trace   
 
-def process_teams( yaml_file = "log_file_map.yml", use_new_log_mode = True ):
+def process_teams( yaml_file = "log_file_map.yaml", use_new_log_mode = True ):
 
     with open(yaml_file,"r") as yfp:
         file_to_team_map = yaml.load(yfp, Loader=yaml.FullLoader)
        
     full_data_set = None
+    starting_pos = 0
 
     for team in file_to_team_map:
+        team["start_pos"] = starting_pos
+        starting_pos += 1
         raw_log_data = process_team_log_file( team, use_new_log_mode )
         team_data = evaluate_and_sort(raw_log_data)
 
@@ -321,4 +324,4 @@ if __name__ == "__main__":
 
 
     chdir( path.dirname(__file__))
-    process_teams(  "log_file_map.yml", not args.legacy )
+    process_teams(  "log_file_map.yaml", not args.legacy )

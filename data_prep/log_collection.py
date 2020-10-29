@@ -229,23 +229,26 @@ def generate_3_lap_race( race_data ):
     race_json = []
     for team in race_teams:
         race_data_file = f"{team}.csv".replace(" ","_").lower()   
-        one_race_team_data = race_data[race_data.team == team].reset_index(drop=True)
+        one_race_team_data = race_data[race_data.team == team]
         last_complete_lap = one_race_team_data[ one_race_team_data['lap_end_state'] == 'lap_complete']
-        if last_complete_lap.count == 0:
+        if last_complete_lap.count == 0 or last_complete_lap.empty:
            keep_lap = 1
+           print("No laps completed.")
         else:
            keep_lap = min(last_complete_lap.race_number.max()+1,3)
         one_race_team_data = one_race_team_data[one_race_team_data.race_number <= keep_lap]    
-        loc_data = one_race_team_data[['x-coordinate', 'y-coordinate','race_number','step']]
+        loc_data = one_race_team_data[['x-coordinate', 'y-coordinate','race_number','step']].reset_index(drop=True)
         loc_data = loc_data.rename(columns={"x-coordinate": "x", "y-coordinate": "y"})
+        
         #Smooth the start-finish line pass
         curr_x = loc_data.loc[0, 'x']
-        
         for i in range(10, len(loc_data)-1):
             if (loc_data.loc[i, 'race_number'] != loc_data.loc[i+1, 'race_number']):
               curr_x = loc_data.loc[i, 'x']
             elif ( loc_data.loc[i, 'step'] < 20 and curr_x > loc_data.loc[i, 'x'] ):
               loc_data.loc[i, 'x'] = curr_x
+
+
         loc_data = loc_data[['x', 'y']]
         loc_data.to_csv(path.join(race_data_path,race_data_file), header=False, index=False)
         one_race_team_data_lap = one_race_team_data[["team","start_pos","car_no",

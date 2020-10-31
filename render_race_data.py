@@ -69,7 +69,7 @@ def create_render_list_txt(camera_action_frames, today):
 def add_cars_to_scene(blend_rel_path, fileData):
     for i in range(len(fileData)):
         # add cars to scene
-        car_collection_path = blend_rel_path + "/race_car.blend/Collection"
+        car_collection_path = blend_rel_path + "/race_car_city.blend/Collection"
         bpy.ops.wm.append(
             directory=car_collection_path,
             link=False, filename="race_car")
@@ -183,6 +183,7 @@ def scene_setup():
         add_viz_toggle_keyframes(bpy.data.objects['banner_bg_white' + iterString], start_car_intro, end_car_intro)
         add_viz_toggle_keyframes(bpy.data.objects['banner_number' + iterString], start_car_intro, end_car_intro)
         add_viz_toggle_keyframes(bpy.data.objects['team_name' + iterString], start_car_intro, end_car_intro)
+        add_viz_toggle_keyframes(bpy.data.objects['city_name' + iterString], start_car_intro, end_car_intro)
         add_viz_toggle_keyframes(bpy.data.objects['team_name_depth' + iterString], start_car_intro, end_car_intro)
         #delete any explosions
         objs = [bpy.data.objects['explode_sprite_color' + iterString], bpy.data.objects['explode_sprite_shadow' + iterString]]

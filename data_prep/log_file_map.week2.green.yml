@@ -1,0 +1,16 @@
+- team: Tech Rovers
+  logfile: tech_rovers.1.log
+  car: 01
+  color: 0x000000
+- team: Chefs of Tech
+  logfile: chefs_of_tech.1.log
+  car: 02
+  color: 0x808080
+- team: Team Swoosh!
+  logfile: team_swoosh.1.log
+  car: 03
+  color: 0x336699
+- team: Vaccinators
+  logfile: vaccinators.1.log
+  car: 04
+  color: 0xff0000

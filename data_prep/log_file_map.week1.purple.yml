@@ -1,0 +1,16 @@
+- team: Incredibles
+  logfile: incredibles.1.log
+  car: 09
+  color: 0x009933
+- team: Autobot
+  logfile: autobot.1.log
+  car: 10
+  color: 0xffff00
+- team: Gals of 4
+  logfile: gals_of_4.1.log
+  car: 11
+  color: 0x00ccff
+- team: Vamos
+  logfile: vamos.1.log
+  car: 12
+  color: 0x996633

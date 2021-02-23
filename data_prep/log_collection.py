@@ -46,7 +46,7 @@ def OpenRead(file):
 
 def parse_message( message_text ):
 
-    hdr = "episode,step,x-coordinate,y-coordinate,heading,steering_angle,speed,action_taken,reward,job_completed,all_wheels_on_track,progress, closest_waypoint_index,track_length,time,state"
+    hdr = "episode,step,x-coordinate,y-coordinate,heading,steering_angle,speed,action_taken,reward,job_completed,all_wheels_on_track,progress,closest_waypoint_index,track_length,time,state"
     message_text = message_text.replace('SIM_TRACE_LOG:','')
 
     headers = hdr.split(",")

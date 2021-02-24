@@ -1,77 +1,16 @@
-- team: Baby Step
-  logfile: BS01-0917-NE-3-6.log
-  car: 28
-  color: 0x2875B8
-  start_pos: 0
-  sandbox: 001
-  model: BS01-0917-NE-3-6
-- team: PIMParticle
-  logfile: PIMParticle-Brooke-003v12.log
-  car: 11
-  color: 0xFF00DC
-  start_pos: 1
-  sandbox: 002
-  model: PIMParticle-Brooke-003v12
-- team: RB
-  logfile: RB-0002-T20-NAS-T0.log
-  car: 99
-  color: 0x000000
-  start_pos: 2
-  sandbox: 001
-  model: RB-0002-T20-NAS-T0
-- team: Flying Iceman
-  logfile: HammerTime-24-2-V2-clone.log
-  car: 44
-  color: 0x05DBFC
-  start_pos: 3
-  sandbox: 002
-  model: HammerTime-24-2-V2-clone
-- team: GhostRiderz
-  logfile: GhostRiderz-Vaibhav-300V2.log
-  car: 66
-  color: 0x000000
-  start_pos: 4
-  sandbox: 002
-  model: GhostRiderz-Vaibhav-300V2
-- team: T Minus 10
-  logfile: TM10-918-S4-T3.log
-  car: 10
-  color: 0x333FFF
-  start_pos: 5
-  sandbox: 001
-  model: TM10-918-S4-T3
-- team: SpeedRacer
-  logfile: SpeedRacer-SK-016v13.log
-  car: 77
-  color: 0xDC2111
-  start_pos: 6
-  sandbox: 002
-  model: SpeedRacer-SK-016v13
-- team: Storm
-  logfile: Storm-RCORG-72S-clone.log
-  car: 35
-  color: 0x2407AB
-  start_pos: 7
-  sandbox: 000
-  model: Storm-RCORG-72S-clone
-- team: BlueStreak
-  logfile: BlueStreak-Chris-101-training5.log
+- team: Team No.1
+  logfile: team_1.1.tar.gz
   car: 05
-  color: 0x131CDF
-  start_pos: 8
-  sandbox: 003
-  model: BlueStreak-Chris-101-training5  
-- team: Lightning McQueen
-  logfile: LightingMcQueen-Model11-clone.log
-  car: 95
-  color: 0xff2410
-  start_pos: 9
-  sandbox: 002
-  model: LightingMcQueen-Model11-clone 
-- team: Artificial Racer
-  logfile: ArtificialRacers-S3p2T26D-5b.log
-  car: 88
-  color: 0x10C42E
-  start_pos: 10
-  sandbox: 000
-  model: ArtificialRacers-S3p2T26D-5b  
+  color: 0xffcc66
+- team: TEA Time
+  logfile: tea_time.1.tar.gz
+  car: 06
+  color: 0xffffff
+- team: Not So Random
+  logfile: not_so_random.1.tar.gz
+  car: 07
+  color: 0x9900ff
+- team: Emotional
+  logfile: emotional.1.tar.gz
+  car: 08
+  color: 0xff00ff

@@ -1,16 +1,16 @@
-- team: Team #1
-  logfile: team_1.1.log
+- team: Team No.1
+  logfile: team_1.1.tar.gz
   car: 05
   color: 0xffcc66
 - team: TEA Time
-  logfile: tea_time.1.log
+  logfile: tea_time.1.tar.gz
   car: 06
   color: 0xffffff
 - team: Not So Random
-  logfile: not_so_random.1.log
+  logfile: not_so_random.1.tar.gz
   car: 07
   color: 0x9900ff
 - team: Emotional
-  logfile: emotional.1.log
+  logfile: emotional.1.tar.gz
   car: 08
   color: 0xff00ff

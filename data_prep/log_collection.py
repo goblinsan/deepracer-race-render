@@ -3,12 +3,13 @@ import argparse
 import json
 import pandas as pd
 import numpy as np
+import tarfile
 from os import path
 from os import chdir
 from os import makedirs
 
 
-def bomType(file):
+def bomType(f):
     """
     returns file encoding string for open() function
 
@@ -17,10 +18,8 @@ def bomType(file):
         open(file, encoding=bom, errors='ignore')
     """
 
-    f = open(file, 'rb')
     b = f.read(4)
-    f.close()
-
+    
     if (b[0:3] == b'\xef\xbb\xbf'):
         return "utf8"
 
@@ -40,8 +39,33 @@ def bomType(file):
 
 
 def OpenRead(file):
-    bom = bomType(file)
-    return open(file, 'r', encoding=bom, errors='ignore')
+
+    content = ""
+
+    if tarfile.is_tarfile(file):
+        tar = tarfile.open(file,"r:gz")
+        for tarinfo in tar:
+            if "logs" in tarinfo.name and "evaluation" in tarinfo.name and ".log" in tarinfo.name:
+                print(f"Extracting {tarinfo.name} from {file}")
+                member = tar.getmember(tarinfo.name)
+                f = tar.extractfile(member)
+                bom = bomType(f)
+                f.close()
+                f = tar.extractfile(member)
+                content = f.read()
+                content = content.decode(bom)
+                f.close()
+                break
+        tar.close()
+    else:
+        f = open(file, 'rb')
+        bom = bomType(f)
+        f.close()
+        f = open(file, 'r', encoding=bom, errors='ignore')
+        content = f.read()
+        f.close
+
+    return content
 
 
 def parse_message( message_text ):
@@ -53,7 +77,7 @@ def parse_message( message_text ):
     data = message_text.replace('SIM_TRACE_LOG:','').split(",")
     
     data_dict = {}
-    for i in range(len(data)):
+    for i in range(len(headers)):
         data_dict[headers[i]] = data[i]
 
     return data_dict    
@@ -100,7 +124,7 @@ def evaluate_and_sort( raw_log_data ):
     
     return df
 
-def process_team_log_file( team, new_style_log = False ):
+def process_team_log_file( team ):
 
     team_name = team["team"]
     log_file_name = path.join("cloudwatch_logs",team["logfile"])
@@ -109,31 +133,19 @@ def process_team_log_file( team, new_style_log = False ):
 
     dr_trace = []
 
-    if not new_style_log :
-        with OpenRead(log_file_name ) as logfile:
-            for msg in json.load(logfile)["events"]:
-                if msg["message"].startswith("SIM_TRACE_LOG:"):
-                    payload = parse_message(msg["message"])
-                    payload["team"] = team_name
-                    payload["car_no"] = str(int(team["car"])).zfill(2)
-                    payload["color"] = team["color"]
-                    payload["start_pos"] = team["start_pos"]
-                    dr_trace.append(payload)
-    else:
-         with OpenRead(log_file_name ) as logfile:
-            for line in logfile.readlines():
-                if line.startswith("SIM_TRACE_LOG:"):
-                    payload = parse_message(line.replace("\n",""))
-                    #print(payload)
-                    payload["team"] = team_name
-                    payload["car_no"] = str(int(team["car"])).zfill(2)
-                    payload["color"] = team["color"]
-                    payload["start_pos"] = team["start_pos"]
-                    dr_trace.append(payload)       
+    for line in OpenRead(log_file_name).splitlines():
+        if line.startswith("SIM_TRACE_LOG:"):
+            payload = parse_message(line.replace("\n",""))
+            #print(payload)
+            payload["team"] = team_name
+            payload["car_no"] = str(int(team["car"])).zfill(2)
+            payload["color"] = team["color"]
+            payload["start_pos"] = team["start_pos"]
+            dr_trace.append(payload)       
 
     return dr_trace   
 
-def process_teams( yaml_file = "log_file_map.yaml", use_new_log_mode = True ):
+def process_teams( yaml_file = "log_file_map.yaml" ):
 
     with open(yaml_file,"r") as yfp:
         file_to_team_map = yaml.load(yfp, Loader=yaml.FullLoader)
@@ -144,7 +156,7 @@ def process_teams( yaml_file = "log_file_map.yaml", use_new_log_mode = True ):
     for team in file_to_team_map:
         team["start_pos"] = starting_pos
         starting_pos += 1
-        raw_log_data = process_team_log_file( team, use_new_log_mode )
+        raw_log_data = process_team_log_file( team )
         team_data = evaluate_and_sort(raw_log_data)
 
         if full_data_set is None:
@@ -316,15 +328,5 @@ def generate_leaderboard_3lap( race_data ):
 
 if __name__ == "__main__":
 
-    
-    parser = argparse.ArgumentParser(description='DeepRacer Log Collection and Race Data Generator')
-    parser.add_argument('--legacy','-l', action="store_true", default=False,
-                        help="Legacy Cloudwatch mode, use for directly exported CloudWatch Files")
-
-    args = parser.parse_args()
-    if args.legacy:
-        print("Using Legacy CloudWatch export mode.")
-
-
     chdir( path.dirname(__file__))
-    process_teams(  "log_file_map.yaml", not args.legacy )
+    process_teams(  "log_file_map.yml" )

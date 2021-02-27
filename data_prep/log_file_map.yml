@@ -1,7 +1,7 @@
-- team: Team No.1
-  logfile: team_1.1.tar.gz
+- team: BA-HF
+  logfile: bank_street.tar.gz
   car: 05
-  color: 0xffcc66
+  color: 0x000000
 - team: TEA Time
   logfile: tea_time.1.tar.gz
   car: 06
@@ -14,3 +14,11 @@
   logfile: emotional.1.tar.gz
   car: 08
   color: 0xff00ff
+- team: The Shire
+  logfile: bilbo_baggins.1.tar.gz
+  car: 32
+  color: 0x378a49
+- team: Biggie Shorts
+  logfile: notorious.1.tar.gz
+  car: 72
+  color: 0x67328c

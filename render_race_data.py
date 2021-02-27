@@ -19,6 +19,7 @@ def get_team_data(race_team_entry):
     team_data['team_position'] = int(race_team_entry['starting_position'])
     team_data['iterString'] = getIterString(team_data['team_position'])
     team_data['team_name'] = race_team_entry['team']
+    # team_data['team_city'] = race_team_entry['city']
     team_data['car_number'] = race_team_entry['car_no']
     team_data['car_color'] = race_team_entry['car_color']
     team_data['car_time'] = race_team_entry['lap_time']
@@ -88,12 +89,11 @@ def apply_race_data_to_car(data_prep_path, file_data, max_frame, texture_path):
     for racer in file_data:
         car_data = get_team_data(racer)
         print("\nRendering race data for " + car_data['team_name'])
-        coords = car_path.getRaceCoords(data_prep_path + car_data['plot_file_path'])
-        curve, max_frame = car_path.generatePath(coords, car_data['team_position'], car_data['total_frames'],
-                                                 len(file_data), max_frame)
+        coords = car_path.get_race_coords(data_prep_path + car_data['plot_file_path'])
+        curve, max_frame = car_path.generate_path(coords, car_data['team_position'], car_data['iterString'], car_data['total_frames'], max_frame)
         car_customize.modifyCarAttributes(texture_path, car_data['iterString'], car_data['car_number'],
                                           car_data['car_color'], car_data['team_name'])
-        car_path.assignCarToPath(curve, car_data['iterString'])
+        car_path.assign_car_to_path(curve, car_data['iterString'])
 
         if car_data['crashed'] == 'off_track':
             print("  !!! Add explosion to car " + car_data['team_name'])
@@ -101,13 +101,13 @@ def apply_race_data_to_car(data_prep_path, file_data, max_frame, texture_path):
     return max_frame
 
 
-def camera_animation_builder(data_prep_path, race_json, today):
+# def camera_animation_builder(data_prep_path, race_json, today):
     # setup camera animations
-    camera_action_frames = setup_camera_animations(race_json, data_prep_path)
-    create_render_list_txt(camera_action_frames, today)
-    for key in camera_action_frames:
-        cam = bpy.data.objects[key]
-        position_camera.setup_camera_frames(cam, camera_action_frames[key])
+    # camera_action_frames = setup_camera_animations(race_json, data_prep_path)
+    # create_render_list_txt(camera_action_frames, today)
+    # for key in camera_action_frames:
+    #     cam = bpy.data.objects[key]
+    #     position_camera.setup_camera_frames(cam, camera_action_frames[key])
 
 
 def add_viz_toggle_keyframes(banner_obj, start_car_intro, end_car_intro):
@@ -145,15 +145,15 @@ def scene_setup():
     bpy.context.scene.frame_end = max_frame
 
     # bake particle collisions for exploding cars
-    for scene in bpy.data.scenes:
-        for object in scene.objects:
-            for modifier in object.modifiers:
-                if modifier.name.startswith("destroyCar"):
-                    bpy.ops.ptcache.bake_all(bake=True)
-                    break
+    # for scene in bpy.data.scenes:
+    #     for object in scene.objects:
+    #         for modifier in object.modifiers:
+    #             if modifier.name.startswith("destroyCar"):
+    #                 bpy.ops.ptcache.bake_all(bake=True)
+    #                 break
 
     # setup cameras
-    camera_animation_builder(data_prep_path, race_json, today)
+    # camera_animation_builder(data_prep_path, race_json, today)
 
     # save generated race blend file
     race_blend_path = f"{bpy.path.abspath('//')}race_{today}.blend"

@@ -175,7 +175,7 @@ def scene_setup():
         car_base.modifiers.clear()
         # setup banner visibility animations
         offset = 120
-        end_animation_frame = 600
+        end_animation_frame = 400
         frame_per_car = (end_animation_frame - offset)/num_racers
         start_car_intro = (i * frame_per_car) + offset
         end_car_intro = ((i+1) * frame_per_car) + offset - 5
@@ -195,7 +195,7 @@ def scene_setup():
             obj.select_set(True)
             bpy.context.active_object.animation_data_clear()
 
-    bpy.data.scenes['Scene'].frame_end = 900
+    bpy.data.scenes['Scene'].frame_end = 650
     bpy.ops.wm.save_as_mainfile(filepath=start_grid_blend_path)
 
 

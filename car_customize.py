@@ -19,10 +19,10 @@ def modifyCarAttributes(texture_path, iterString, car_number, car_color, team_na
     # bpy.data.objects['city_name' + iterString].data.body = team_city
     bpy.data.objects['team_name_depth' + iterString].data.body = team_name
     # set camera constraints for starting grid intro shot
-    # bpy.data.objects['explode_sprite_color' + iterString].constraints["Locked Track"].target = bpy.data.objects["start_grid"]
-    # bpy.data.objects['banner_bg' + iterString].constraints["Locked Track"].target = bpy.data.objects["start_grid"]
-    # bpy.data.objects['banner_bg_white' + iterString].constraints["Locked Track"].target = bpy.data.objects["start_grid"]
-    # bpy.data.objects['banner_number' + iterString].constraints["Locked Track"].target = bpy.data.objects["start_grid"]
-    # bpy.data.objects['team_name' + iterString].constraints["Locked Track"].target = bpy.data.objects["start_grid"]
-    # bpy.data.objects['city_name' + iterString].constraints["Locked Track"].target = bpy.data.objects["start_grid"]
+    bpy.data.objects['explode_sprite_color' + iterString].constraints["Locked Track"].target = bpy.data.objects["start_grid"]
+    bpy.data.objects['banner_bg' + iterString].constraints["Locked Track"].target = bpy.data.objects["start_grid"]
+    bpy.data.objects['banner_bg_white' + iterString].constraints["Locked Track"].target = bpy.data.objects["start_grid"]
+    bpy.data.objects['banner_number' + iterString].constraints["Locked Track"].target = bpy.data.objects["start_grid"]
+    bpy.data.objects['team_name' + iterString].constraints["Locked Track"].target = bpy.data.objects["start_grid"]
+    bpy.data.objects['city_name' + iterString].constraints["Locked Track"].target = bpy.data.objects["start_grid"]
 

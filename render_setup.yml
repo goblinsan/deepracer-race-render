@@ -1,4 +1,4 @@
 blender_exe: C:\Program Files\Blender Foundation\Blender 2.92\blender.exe
 base_blender_file: base_track-2019.blend
-render_out_dir: D:\deepRacer\renders
-start_render: False
+render_out_dir: D:\deepRacer\renders\e2-trial
+start_render: True

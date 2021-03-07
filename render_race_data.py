@@ -15,8 +15,7 @@ def getIterString(team_position):
 
 
 def get_team_data(race_team_entry):
-    team_data = {}
-    team_data['team_position'] = int(race_team_entry['starting_position'])
+    team_data = {'team_position': int(race_team_entry['starting_position'])}
     team_data['iterString'] = getIterString(team_data['team_position'])
     team_data['team_name'] = race_team_entry['team']
     # team_data['team_city'] = race_team_entry['city']
@@ -28,29 +27,31 @@ def get_team_data(race_team_entry):
     team_data['total_frames'] = 24 * team_data['car_time']
     return team_data
 
-def setup_camera_animations(race_json, data_prep_path):
+
+def setup_camera_animations(data_prep_path, race_json):
     best_csv, best_time = camera_activation.get_best_car(race_json)
     print(f'\nwinning car - csv: {best_csv} best time: {best_time}')
-    best_coords = camera_activation.get_race_coords(data_prep_path + best_csv)
+    best_coords = camera_activation.get_race_coords(os.path.join(data_prep_path, best_csv))
     zone_list = []
 
-    for i in range(1, 7):
+    for i in range(1, 4):
         zone_cube = bpy.data.objects[f'activation_bounds_{i}']
         min_x, max_x, min_y, max_y = get_max_min.get_zone_max_min(zone_cube)
         zone_list.append(camera_activation.create_zone(i, min_x, max_x, min_y, max_y))
 
     coord_markers = camera_activation.get_coord_markers(best_coords, best_time, zone_list + zone_list + zone_list)
-    camera_01 = {'name': '01_race_start_cam', 'rule': [("exit", 1), ("exit", 2)]}
-    camera_02 = {'name': '02_turn_1_close_cam', 'rule': [("enter", 2), ("exit", 4)]}
-    camera_03 = {'name': '03_start_sbend', 'rule': [("enter", 3), ("enter", 5)]}
-    camera_04 = {'name': '04_thru_sbend', 'rule': [("exit", 4), ("exit", 5)]}
-    camera_05 = {'name': '05_back_corner', 'rule': [("enter", 5), ("enter", 6)]}
-    camera_06 = {'name': '06_last_turn', 'rule': [("exit", 5), ("exit", 6)]}
+    camera_01 = {'name': 'high-starting-line', 'rule': [("exit", 1), ("enter", 2)]}
+    camera_02 = {'name': 'front_chicane', 'rule': [("enter", 2), ("exit", 2)]}
+    camera_03 = {'name': 'back-corner', 'rule': [("exit", 2), ("enter", 3)]}
+    camera_04 = {'name': 'back_chicane', 'rule': [("enter", 3), ("exit", 3)]}
+    camera_05 = {'name': 'last-turn', 'rule': [("exit", 3), ("enter", 1)]}
+    camera_06 = {'name': 'finish-line-tight', 'rule': [("enter", 1), ("exit", 1)]}
     camera_action_frames = camera_activation.get_camera_action_frames_dic(coord_markers,
-                                                           [camera_01, camera_02, camera_03, camera_04, camera_05,
-                                                            camera_06])
-    last_mapped_frame = camera_action_frames['06_last_turn'][-1]
-    camera_action_frames['07_race_clean_up'] = [[last_mapped_frame[-1], last_mapped_frame[-1] + 300]]
+                                                                          [camera_01, camera_02, camera_03, camera_04,
+                                                                           camera_05,
+                                                                           camera_06])
+    last_mapped_frame = camera_action_frames['finish-line-tight'][-1]
+    camera_action_frames['race_clean_up'] = [[last_mapped_frame[-1], last_mapped_frame[-1] + 300]]
 
     return camera_action_frames
 
@@ -58,17 +59,17 @@ def setup_camera_animations(race_json, data_prep_path):
 def create_render_list_txt(camera_action_frames, today):
     with open(f"render_list_{today}.json", "w") as text_file:
         print("{", file=text_file)
-        print(f'  "00_starting_line_cam": [[0, 40]],', file=text_file)
+        print(f'  "starting_line_cam": [[0, 40]],', file=text_file)
         for a in camera_action_frames:
-            if a == '07_race_clean_up':
+            if a == 'race_clean_up':
                 print(f'  "{a}": {camera_action_frames[a]}', file=text_file)
             else:
                 print(f'  "{a}": {camera_action_frames[a]},', file=text_file)
         print("}", file=text_file)
 
 
-def add_cars_to_scene(blend_rel_path, fileData):
-    for i in range(len(fileData)):
+def add_cars_to_scene(blend_rel_path, file_data):
+    for i in range(len(file_data)):
         # add cars to scene
         car_collection_path = blend_rel_path + "/race_car_city.blend/Collection"
         bpy.ops.wm.append(
@@ -89,8 +90,9 @@ def apply_race_data_to_car(data_prep_path, file_data, max_frame, texture_path):
     for racer in file_data:
         car_data = get_team_data(racer)
         print("\nRendering race data for " + car_data['team_name'])
-        coords = car_path.get_race_coords(data_prep_path + car_data['plot_file_path'])
-        curve, max_frame = car_path.generate_path(coords, car_data['team_position'], car_data['iterString'], car_data['total_frames'], max_frame)
+        coords = car_path.get_race_coords(os.path.join(data_prep_path, car_data['plot_file_path']))
+        curve, max_frame = car_path.generate_path(coords, car_data['team_position'], car_data['iterString'],
+                                                  car_data['total_frames'], max_frame)
         car_customize.modifyCarAttributes(texture_path, car_data['iterString'], car_data['car_number'],
                                           car_data['car_color'], car_data['team_name'])
         car_path.assign_car_to_path(curve, car_data['iterString'])
@@ -101,10 +103,10 @@ def apply_race_data_to_car(data_prep_path, file_data, max_frame, texture_path):
     return max_frame
 
 
-# def camera_animation_builder(data_prep_path, race_json, today):
-    # setup camera animations
-    # camera_action_frames = setup_camera_animations(race_json, data_prep_path)
-    # create_render_list_txt(camera_action_frames, today)
+def camera_animation_builder(data_prep_path, race_json, today):
+    camera_action_frames = setup_camera_animations(data_prep_path, race_json)
+    create_render_list_txt(camera_action_frames, today)
+
     # for key in camera_action_frames:
     #     cam = bpy.data.objects[key]
     #     position_camera.setup_camera_frames(cam, camera_action_frames[key])
@@ -130,10 +132,10 @@ def scene_setup():
 
     # setup filepath directories to allow script to run in ide or blender
     blend_rel_path = get_relative_blender_path()
-    data_prep_path = blend_rel_path + "/data_prep/"
-    race_data_path = data_prep_path + "race_data_best_3laps"
-    race_json = race_data_path + "/race_data.json"
-    texture_path = blend_rel_path + "/Textures"
+    data_prep_path = os.path.join(blend_rel_path, "data_prep")
+    race_data_path = os.path.join(data_prep_path, "race_data_best_3laps")
+    race_json = os.path.join(race_data_path, "race_data.json")
+    texture_path = os.path.join(blend_rel_path, "Textures")
 
     with open(race_json) as f:
         file_data = json.load(f)
@@ -145,23 +147,23 @@ def scene_setup():
     bpy.context.scene.frame_end = max_frame
 
     # bake particle collisions for exploding cars
-    # for scene in bpy.data.scenes:
-    #     for object in scene.objects:
-    #         for modifier in object.modifiers:
-    #             if modifier.name.startswith("destroyCar"):
-    #                 bpy.ops.ptcache.bake_all(bake=True)
-    #                 break
+    for scene in bpy.data.scenes:
+        for any_object in scene.objects:
+            for modifier in any_object.modifiers:
+                if modifier.name.startswith("destroyCar"):
+                    bpy.ops.ptcache.bake_all(bake=True)
+                    break
 
     # setup cameras
-    # camera_animation_builder(data_prep_path, race_json, today)
+    camera_animation_builder(data_prep_path, race_json, today)
 
     # save generated race blend file
-    race_blend_path = f"{bpy.path.abspath('//')}race_{today}.blend"
+    race_blend_path = os.path.join(bpy.path.abspath('//'), "race_blend_files", f"race_{today}.blend")
     print(f"\nSaving race blend file as: {race_blend_path}")
     bpy.ops.wm.save_as_mainfile(filepath=race_blend_path)
 
     # save generated starting grid blend file
-    start_grid_blend_path = f"{bpy.path.abspath('//')}starting_grid_{today}.blend"
+    start_grid_blend_path = os.path.join(bpy.path.abspath('//'), f"starting_grid_{today}.blend")
     print(f"\nCreate Starting Grid and saving file as: {start_grid_blend_path}")
 
     num_racers = len(file_data)
@@ -176,17 +178,18 @@ def scene_setup():
         # setup banner visibility animations
         offset = 120
         end_animation_frame = 400
-        frame_per_car = (end_animation_frame - offset)/num_racers
+        frame_per_car = (end_animation_frame - offset) / num_racers
         start_car_intro = (i * frame_per_car) + offset
-        end_car_intro = ((i+1) * frame_per_car) + offset - 5
+        end_car_intro = ((i + 1) * frame_per_car) + offset - 5
         add_viz_toggle_keyframes(bpy.data.objects['banner_bg' + iterString], start_car_intro, end_car_intro)
         add_viz_toggle_keyframes(bpy.data.objects['banner_bg_white' + iterString], start_car_intro, end_car_intro)
         add_viz_toggle_keyframes(bpy.data.objects['banner_number' + iterString], start_car_intro, end_car_intro)
         add_viz_toggle_keyframes(bpy.data.objects['team_name' + iterString], start_car_intro, end_car_intro)
         add_viz_toggle_keyframes(bpy.data.objects['city_name' + iterString], start_car_intro, end_car_intro)
         add_viz_toggle_keyframes(bpy.data.objects['team_name_depth' + iterString], start_car_intro, end_car_intro)
-        #delete any explosions
-        objs = [bpy.data.objects['explode_sprite_color' + iterString], bpy.data.objects['explode_sprite_shadow' + iterString]]
+        # delete any explosions
+        objs = [bpy.data.objects['explode_sprite_color' + iterString],
+                bpy.data.objects['explode_sprite_shadow' + iterString]]
         bpy.ops.object.delete({"selected_objects": objs})
 
     for obj in bpy.context.scene.objects:
@@ -210,5 +213,5 @@ if __name__ == '__main__':
     import camera_activation
     import get_max_min
     import position_camera
-    scene_setup()
 
+    scene_setup()

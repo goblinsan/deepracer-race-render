@@ -59,7 +59,7 @@ def setup_camera_animations(data_prep_path, race_json):
 def create_render_list_txt(camera_action_frames, today):
     with open(f"render_list_{today}.json", "w") as text_file:
         print("{", file=text_file)
-        print(f'  "starting_line_cam": [[0, 40]],', file=text_file)
+        print(f'  "starting-line-cam": [[0, 40]],', file=text_file)
         for a in camera_action_frames:
             if a == 'race_clean_up':
                 print(f'  "{a}": {camera_action_frames[a]}', file=text_file)

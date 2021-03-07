@@ -18,7 +18,7 @@ cam = bpy.data.objects[cam_name]
 cam.select_set(True)
 bpy.data.scenes["Scene"].camera = cam
 bpy.data.scenes["Scene"].frame_start = start_frame
-if not cam_name == '07_race_clean_up':
+if not cam_name == 'race_clean_up':
     bpy.data.scenes["Scene"].frame_end = end_frame
 
 # uncomment the following for quick 1 frame tests

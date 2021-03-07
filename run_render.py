@@ -30,8 +30,11 @@ if __name__ == '__main__':
         print(f'{camera_name} : frames {cam_frames}')
 
         if start_render:
+            subprocess.run([exe_path, "-b", os.path.join('race_blend_files', f'starting_grid_{today}.blend'), "-o",
+                            f'{render_path}/{today}/team_intro/', "-a"])
+
             for frame_set in cam_frames:
-                subprocess.run([exe_path, "-b", os.path.join('race_blend_files', f'race_{today}.blend'), "--python", "render_instructions.py", "--",
+                subprocess.run([exe_path, "-b", os.path.join('race_blend_files', f'race_{today}.blend'), "--python",
+                                "render_instructions.py", "--",
                                 f'{render_path}', f'{today}', f'{camera_name}', f'{frame_set[0]}', f'{frame_set[1]}'])
 
-            subprocess.run([exe_path, "-b", os.path.join('race_blend_files', f'starting_grid_{today}.blend'), "-o", f'{render_path}/{today}/team_intro/', "-a"])

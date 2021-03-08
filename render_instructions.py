@@ -6,12 +6,13 @@ argv = sys.argv
 try:
     extra_args = argv[argv.index("--") + 1:]  # get all args after "--"
     render_dir = extra_args[0]
-    today = extra_args[1]
-    cam_name = extra_args[2]
-    start_frame = int(extra_args[3])
-    end_frame = int(extra_args[4])
+    race_name = extra_args[1]
+    today = extra_args[2]
+    cam_name = extra_args[3]
+    start_frame = int(extra_args[4])
+    end_frame = int(extra_args[5])
 except ValueError:
-    print("Expecting args: render_dir, today, camera name, start frame, end frame")
+    print("Expecting args: render_dir, race_name, today, camera name, start frame, end frame")
     sys.exit(1)
 
 cam = bpy.data.objects[cam_name]
@@ -29,6 +30,6 @@ for obj in bpy.context.scene.objects:
     if obj.name.startswith("explode_sprite_color"):
         obj.constraints["Locked Track"].target = cam
 
-bpy.data.scenes["Scene"].render.filepath = f'{render_dir}/{today}/{cam_name}/{start_frame}_{end_frame}/'
+bpy.data.scenes["Scene"].render.filepath = f'{render_dir}/{race_name}/{today}/{cam_name}/{start_frame}_{end_frame}/'
 
 bpy.ops.render.render(animation=True)

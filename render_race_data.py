@@ -122,11 +122,16 @@ def add_viz_toggle_keyframes(banner_obj, start_car_intro, end_car_intro):
 
 def scene_setup():
     argv = sys.argv
+
     try:
         extra_args = argv[argv.index("--") + 1:]  # get all args after "--"
         today = extra_args[0]
+        race_name = extra_args[1]
+        bake_crash_fx = extra_args[2] == 'True'
     except ValueError:
         today = datetime.date.today()
+        race_name = "deepRacer-sample"
+        bake_crash_fx = True
 
     max_frame = 500
 
@@ -147,18 +152,19 @@ def scene_setup():
     bpy.context.scene.frame_end = max_frame
 
     # bake particle collisions for exploding cars
-    for scene in bpy.data.scenes:
-        for any_object in scene.objects:
-            for modifier in any_object.modifiers:
-                if modifier.name.startswith("destroyCar"):
-                    bpy.ops.ptcache.bake_all(bake=True)
-                    break
+    if bake_crash_fx:
+        for scene in bpy.data.scenes:
+            for any_object in scene.objects:
+                for modifier in any_object.modifiers:
+                    if modifier.name.startswith("destroyCar"):
+                        bpy.ops.ptcache.bake_all(bake=True)
+                        break
 
     # setup cameras
     camera_animation_builder(data_prep_path, race_json, today)
 
     # save generated race blend file
-    race_blend_path = os.path.join(bpy.path.abspath('//'), "race_blend_files", f"race_{today}.blend")
+    race_blend_path = os.path.join(bpy.path.abspath('//'), "race_blend_files", race_name, f"race_{today}.blend")
     print(f"\nSaving race blend file as: {race_blend_path}")
     bpy.ops.wm.save_as_mainfile(filepath=race_blend_path)
 

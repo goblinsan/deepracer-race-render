@@ -32,7 +32,7 @@ if __name__ == '__main__':
         render_instructions = json.load(render_list_file)
 
     if start_render:
-        subprocess.run([exe_path, "-b", os.path.join('race_blend_files', f'starting_grid_{today}.blend'), "-o",
+        subprocess.run([exe_path, "-b", os.path.join('race_blend_files', race_name, f'starting_grid_{today}.blend'), "-o",
                     f'{render_path}/{race_name}/{today}/team_intro/', "-a"])
 
     for camera_name, cam_frames in render_instructions.items():
@@ -40,7 +40,7 @@ if __name__ == '__main__':
 
         if start_render:
             for frame_set in cam_frames:
-                subprocess.run([exe_path, "-b", os.path.join('race_blend_files', f'race_{today}.blend'), "--python",
+                subprocess.run([exe_path, "-b", os.path.join('race_blend_files', race_name, f'race_{today}.blend'), "--python",
                                 "render_instructions.py", "--",
                                 f'{render_path}', f'{race_name}', f'{today}', f'{camera_name}', f'{frame_set[0]}', f'{frame_set[1]}'])
 

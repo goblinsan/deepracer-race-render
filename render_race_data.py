@@ -77,7 +77,7 @@ def create_render_list_txt(camera_action_frames, today):
 def add_cars_to_scene(blend_rel_path, file_data):
     for i in range(len(file_data)):
         # add cars to scene
-        car_collection_path = blend_rel_path + "/race_car_city.blend/Collection"
+        car_collection_path = blend_rel_path + "/race_car.blend/Collection"
         bpy.ops.wm.append(
             directory=car_collection_path,
             link=False, filename="race_car")
@@ -150,7 +150,6 @@ def scene_setup():
 
     # bake particle collisions for exploding cars
     if bake_crash_fx:
-
         old = deep_racer_utils.start_output_redirect(race_name, 'bake_fx')
         for scene in bpy.data.scenes:
             for any_object in scene.objects:
@@ -191,7 +190,7 @@ def scene_setup():
         add_viz_toggle_keyframes(bpy.data.objects['banner_bg_white' + iterString], start_car_intro, end_car_intro)
         add_viz_toggle_keyframes(bpy.data.objects['banner_number' + iterString], start_car_intro, end_car_intro)
         add_viz_toggle_keyframes(bpy.data.objects['team_name' + iterString], start_car_intro, end_car_intro)
-        add_viz_toggle_keyframes(bpy.data.objects['city_name' + iterString], start_car_intro, end_car_intro)
+        # add_viz_toggle_keyframes(bpy.data.objects['city_name' + iterString], start_car_intro, end_car_intro)
         add_viz_toggle_keyframes(bpy.data.objects['team_name_depth' + iterString], start_car_intro, end_car_intro)
         # delete any explosions
         objs = [bpy.data.objects['explode_sprite_color' + iterString],

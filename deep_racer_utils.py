@@ -12,10 +12,14 @@ def get_relative_blender_path():
     return blend_rel_path
 
 
-def start_output_redirect(race_name, name):
+def get_log_path(race_name, name):
     log_path = os.path.join('race_blend_files', race_name, 'logs')
     log_name = f'{name}_{datetime.now().strftime("%Y-%m-%d_%H.%M.%S")}.log'
-    logfile = os.path.join(log_path, log_name)
+    return os.path.join(log_path, log_name)
+
+
+def start_output_redirect(race_name, name):
+    logfile = get_log_path(race_name, name)
     open(logfile, 'a').close()
     old = os.dup(1)
     sys.stdout.flush()

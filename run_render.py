@@ -6,6 +6,8 @@ from pathlib import Path
 
 import yaml
 
+from deep_racer_utils import get_log_path
+
 
 def build_blend_files():
     subprocess.run([exe_path, "--background", base_blend, "--python", "render_race_data.py",
@@ -28,7 +30,6 @@ if __name__ == '__main__':
     logfile_path = os.path.join(save_path, "logs")
     Path(logfile_path).mkdir(parents=True, exist_ok=True)
     run_date = datetime.date.today()
-    # run_date = '2021-03-08'
 
     build_blend_files()
 
@@ -36,14 +37,16 @@ if __name__ == '__main__':
         render_instructions = json.load(render_list_file)
 
     if start_render:
-        subprocess.run(
-            [exe_path, "-b", os.path.join('race_blend_files', race_name, f'starting_grid_{run_date}.blend'), "-o",
-             f'{render_path}/{race_name}/{run_date}/team_intro/', "-a"])
+        logfile = get_log_path(race_name, 'intro_render')
+        with open(logfile, 'w') as fp:
+            subprocess.run(
+                [exe_path, "-b", os.path.join('race_blend_files', race_name, f'starting_grid_{run_date}.blend'), "-o",
+                 f'{render_path}/{race_name}/{run_date}/team_intro/', "-a"], stdout=fp)
 
     for camera_name, cam_frames in render_instructions.items():
         print(f'{camera_name} : frames {cam_frames}')
 
-        if start_render:
+        if start_render and camera_name != 'last-turn':
             for frame_set in cam_frames:
                 subprocess.run(
                     [exe_path, "-b", os.path.join('race_blend_files', race_name, f'race_{run_date}.blend'), "--python",

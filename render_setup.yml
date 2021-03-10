@@ -3,4 +3,5 @@ base_blender_file: base_track-2019.blend
 race_name: e2-trial
 render_out_dir: D:\deepRacer\renders
 start_render: False
-bake_crash_fx: False
+bake_crash_fx: True
+assemble_video: True

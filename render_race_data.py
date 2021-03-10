@@ -5,6 +5,12 @@ import datetime
 
 import bpy
 
+blend_dir = os.path.dirname(bpy.data.filepath)
+if blend_dir not in sys.path:
+    sys.path.append(blend_dir)
+
+import deep_racer_utils
+
 
 def getIterString(team_position):
     iterString = ''
@@ -77,15 +83,6 @@ def add_cars_to_scene(blend_rel_path, file_data):
             link=False, filename="race_car")
 
 
-def get_relative_blender_path():
-    rel_path = ""
-    blender_script_dir = os.path.dirname(__file__)
-    if blender_script_dir.endswith('.blend'):
-        rel_path = "/.."
-    blend_rel_path = blender_script_dir + rel_path
-    return blend_rel_path
-
-
 def apply_race_data_to_car(data_prep_path, file_data, max_frame, texture_path):
     for racer in file_data:
         car_data = get_team_data(racer)
@@ -136,7 +133,7 @@ def scene_setup():
     max_frame = 500
 
     # setup filepath directories to allow script to run in ide or blender
-    blend_rel_path = get_relative_blender_path()
+    blend_rel_path = deep_racer_utils.get_relative_blender_path()
     data_prep_path = os.path.join(blend_rel_path, "data_prep")
     race_data_path = os.path.join(data_prep_path, "race_data_best_3laps")
     race_json = os.path.join(race_data_path, "race_data.json")
@@ -153,12 +150,15 @@ def scene_setup():
 
     # bake particle collisions for exploding cars
     if bake_crash_fx:
+
+        old = deep_racer_utils.start_output_redirect(race_name, 'bake_fx')
         for scene in bpy.data.scenes:
             for any_object in scene.objects:
                 for modifier in any_object.modifiers:
                     if modifier.name.startswith("destroyCar"):
                         bpy.ops.ptcache.bake_all(bake=True)
                         break
+        deep_racer_utils.stop_output_redirect(old)
 
     # setup cameras
     camera_animation_builder(data_prep_path, race_json, today)

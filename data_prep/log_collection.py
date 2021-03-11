@@ -71,6 +71,11 @@ def parse_message(message_text):
     hdr = "episode,step,x-coordinate,y-coordinate,heading,steering_angle,speed,action_taken,reward,job_completed,all_wheels_on_track,progress,closest_waypoint_index,track_length,time,state"
     message_text = message_text.replace('SIM_TRACE_LOG:', '')
 
+    idx_bracket1 = message_text.find("[")
+    if idx_bracket1 >= 0:
+        idx_bracket2 = message_text.find("]",idx_bracket1)
+        message_text = message_text[0:idx_bracket1] +  message_text[idx_bracket2+1:]
+    
     headers = hdr.split(",")
     data = message_text.replace('SIM_TRACE_LOG:', '').split(",")
 

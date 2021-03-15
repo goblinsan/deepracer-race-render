@@ -320,7 +320,7 @@ def generate_leaderboard_3lap(race_data):
     prior_time = 0.0
     race["delta"] = 0.0
     for index_label, row_series in race.iterrows():
-        if race.at[index_label, 'lap_average'] != np.NaN and prior_time is not 0.0:
+        if (race.at[index_label, 'lap_average'] != np.NaN) and (prior_time != 0.0):
             race.at[index_label, 'delta'] = row_series['lap_average'] - prior_time
         else:
             race.at[index_label, 'delta'] = np.NaN

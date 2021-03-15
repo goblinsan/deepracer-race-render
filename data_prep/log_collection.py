@@ -197,7 +197,7 @@ def generate_leaderboards(race_data):
         one_race_lb["Delta"] = 0.0
         for index_label, row_series in one_race_lb.iterrows():
             # For each row update the 'Bonus' value to it's double
-            if one_race_lb.at[index_label, 'lap_end_state'] == 'lap_complete' and prior_time is not 0.0:
+            if (one_race_lb.at[index_label, 'lap_end_state'] == 'lap_complete') and (prior_time != 0.0):
                 one_race_lb.at[index_label, 'Delta'] = row_series['lap_time'] - prior_time
             else:
                 one_race_lb.at[index_label, 'Delta'] = np.NaN

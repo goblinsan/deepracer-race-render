@@ -16,10 +16,13 @@ def modifyCarAttributes(texture_path, iterString, car_number, car_color, team_na
     bpy.data.materials['text_white' + iterString].node_tree.nodes['text_color'].inputs[0].default_value = contrast
     # update banner text
     bpy.data.objects['team_name' + iterString].data.body = team_name
+    # bpy.data.objects['city_name' + iterString].data.body = team_city
     bpy.data.objects['team_name_depth' + iterString].data.body = team_name
+    # set camera constraints for starting grid intro shot
     bpy.data.objects['explode_sprite_color' + iterString].constraints["Locked Track"].target = bpy.data.objects["start_grid"]
     bpy.data.objects['banner_bg' + iterString].constraints["Locked Track"].target = bpy.data.objects["start_grid"]
     bpy.data.objects['banner_bg_white' + iterString].constraints["Locked Track"].target = bpy.data.objects["start_grid"]
     bpy.data.objects['banner_number' + iterString].constraints["Locked Track"].target = bpy.data.objects["start_grid"]
     bpy.data.objects['team_name' + iterString].constraints["Locked Track"].target = bpy.data.objects["start_grid"]
+    # bpy.data.objects['city_name' + iterString].constraints["Locked Track"].target = bpy.data.objects["start_grid"]
 

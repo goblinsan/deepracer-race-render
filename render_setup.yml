@@ -1,3 +1,7 @@
-blender_exe: C:\Program Files\Blender Foundation\Blender 2.90\blender.exe
+blender_exe: C:\Program Files\Blender Foundation\Blender 2.92\blender.exe
+base_blender_file: base_track-2019.blend
+race_name: e2-trial
 render_out_dir: D:\deepRacer\renders
 start_render: True
+bake_crash_fx: True
+assemble_video: True

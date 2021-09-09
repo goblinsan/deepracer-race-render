@@ -3,43 +3,33 @@ import csv
 import bpy
 
 
-def getRaceCoords(csv_filepath):
+def get_race_coords(csv_filepath):
     with open(csv_filepath) as csvfile:
         reader = csv.reader(csvfile, quoting=csv.QUOTE_NONNUMERIC)
         next(reader, None)
         return list(reader)
 
 
-def getAddedCoordsForStartingPosition(team_position, first_coord, num_of_cars):
-    max_move_x = 10
-    incremental = max_move_x / num_of_cars
-    x_translate = (incremental * team_position) + .4
-    if team_position % 2 != 0:
-        y_translate = .2
-    else:
-        y_translate = -.15
+def get_added_coords_for_starting_position(iter_string):
+    starting_curve = bpy.data.objects["start_grid_curve" + iter_string]
+    starting_curve_bez_points = bpy.data.curves["start_grid_curve" + iter_string].splines[0].bezier_points
 
-    current_x = first_coord[0]
-    current_y = first_coord[1]
-    first_x = current_x - x_translate
-    second_x = current_x - 0.3
-    third_x = current_x - 0.1
-    first_y = current_y - y_translate
+    xyz1 = starting_curve.matrix_world @ starting_curve_bez_points[0].co
+    xyz2 = starting_curve.matrix_world @ starting_curve_bez_points[1].co
+    xyz3 = starting_curve.matrix_world @ starting_curve_bez_points[2].co
 
-    coord_list = []
-    coord_list.append([first_x, first_y])
-    coord_list.append([second_x, first_y])
-    coord_list.append([third_x, first_y])
-    return coord_list
+    return [[xyz1[0], xyz1[1]],
+            [xyz2[0], xyz2[1]],
+            [xyz3[0], xyz3[1]]]
 
 
-def generatePath(coords, racer_number, total_frames, num_of_cars, max_frame):
+def generate_path(coords, racer_number, iter_string, total_frames, max_frame):
     curve_name = "racer_" + str(racer_number) + "_curve"
     # make a new curve
     crv = bpy.data.curves.new('crv_' + str(racer_number), 'CURVE')
     crv.dimensions = '2D'
 
-    starting_coords = getAddedCoordsForStartingPosition(racer_number, coords[0], num_of_cars)
+    starting_coords = get_added_coords_for_starting_position(iter_string)
     updated_coords = starting_coords + coords
 
     # make a new spline in that curve
@@ -65,9 +55,9 @@ def generatePath(coords, racer_number, total_frames, num_of_cars, max_frame):
     return new_curve, max_frame
 
 
-def assignCarToPath(curve, iterString):
+def assign_car_to_path(curve, iter_string):
     objects = bpy.data.objects
-    car_base = objects['car_base' + iterString]
+    car_base = objects['car_base' + iter_string]
 
     bpy.ops.object.select_all(action='DESELECT')
 
@@ -76,8 +66,7 @@ def assignCarToPath(curve, iterString):
 
     bpy.context.view_layer.objects.active = curve
     bpy.ops.object.parent_set(type="FOLLOW")
-    explode_color = objects['explode_sprite_color' + iterString]
+    explode_color = objects['explode_sprite_color' + iter_string]
     explode_color.hide_render = True
-    explode_shadow = objects['explode_sprite_shadow' + iterString]
+    explode_shadow = objects['explode_sprite_shadow' + iter_string]
     explode_shadow.hide_render = True
-

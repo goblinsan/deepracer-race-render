@@ -1,0 +1,16 @@
+- team: Frontier
+  logfile: frontier.1.log
+  car: 05
+  color: 0xff6600
+- team: Blue Lagoon
+  logfile: blue_lagoon.1.log
+  car: 06
+  color: 0xffffff
+- team: Jawss
+  logfile: jawss.1.log
+  car: 07
+  color: 0x9900ff
+- team: Illume
+  logfile: illume.1.log
+  car: 08
+  color: 0xff00ff

@@ -6,3 +6,11 @@
   logfile: RB-2021-0008-PMV-F9.tar.gz 
   car: 77
   color: 0xe71837
+- team: GhostRiderz
+  logfile: GhostRiderz-Amy-M001v005-3.tar.gz
+  car: 55
+  color: 0x9900ff
+- team: SoundRiders
+  logfile: SoundRiders-jch-2019Track-2.tar.gz
+  car: 33
+  color: 0x003399

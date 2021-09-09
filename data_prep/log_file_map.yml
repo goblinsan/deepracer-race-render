@@ -1,24 +1,8 @@
-- team: BA-HF
-  logfile: bank_street.tar.gz
-  car: 05
+- team: RB
+  logfile: SpeedRacer-Susheel-003a6.tar.gz 
+  car: 99
   color: 0x000000
-- team: TEA Time
-  logfile: tea_time.1.tar.gz
-  car: 06
-  color: 0xffffff
-- team: Not So Random
-  logfile: not_so_random.1.tar.gz
-  car: 07
-  color: 0x9900ff
-- team: Emotional
-  logfile: emotional.1.tar.gz
-  car: 08
-  color: 0xff00ff
-- team: The Shire
-  logfile: bilbo_baggins.1.tar.gz
-  car: 32
-  color: 0x378a49
-- team: Biggie Shorts
-  logfile: notorious.1.tar.gz
-  car: 72
-  color: 0x67328c
+- team: SpeedRacer
+  logfile: RB-2021-0008-PMV-F9.tar.gz 
+  car: 77
+  color: 0xe71837

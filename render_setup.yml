@@ -2,8 +2,8 @@
 log_path: E:\deep-racer\eval_example\unextracted
 blender_exe: C:\Program Files\Blender Foundation\Blender 2.92\blender.exe
 base_blender_file: base_track-baadal.blend
-race_name: baadal-test-2021
-render_out_dir: E:\deep-racer\baadal-test-2021-again
+race_name: major-refactor-baadal
+render_out_dir: E:\deep-racer\render-output\major-refctor
 race_laps: 3
 
 
@@ -13,5 +13,5 @@ start_render: True
 one_frame_render: False
 bake_crash_fx: True
 assemble_video: True
-race_speed: 6 # Multiply the race speed.  eg. set to 2 for double speed (faster race)
+race_speed: 1 # Multiply the race speed.  eg. set to 2 for double speed (faster race)
 

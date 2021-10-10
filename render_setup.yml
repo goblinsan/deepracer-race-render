@@ -1,9 +1,9 @@
 # Main settings
-log_path: E:\deep-racer\eval_example\unextracted
-blender_exe: C:\Program Files\Blender Foundation\Blender 2.92\blender.exe
+log_path: C:\Users\coghl\Downloads\deep-racer-logs
+blender_exe: C:\Program Files\Blender Foundation\Blender 2.83\blender.exe
 base_blender_file: base_track-baadal.blend
 race_name: major-refactor-baadal
-render_out_dir: E:\deep-racer\render-output\major-refctor
+render_out_dir: C:\Users\coghl\animation\deep-racer
 race_laps: 3
 
 

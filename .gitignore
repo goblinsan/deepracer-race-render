@@ -1,12 +1,6 @@
 # Generated race files
-data_prep/race_data_best_3laps
-data_prep/race_data_single_laps
-data_prep/race_data_out.csv
 race_blend_files/
 render_list_*
-# don't commit log files
-data_prep/cloudwatch_logs/*
-!data_prep/cloudwatch_logs/put_logs_in_this_directory.txt
 
 # Exclude blender autosave versions
 *.blend1

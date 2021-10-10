@@ -98,7 +98,6 @@ def create_render_list_txt(camera_action_frames, race_blend_path, today):
 
 def add_cars_to_scene(blend_rel_path, file_data):
     for i in range(len(file_data)):
-        # add cars to scene
         car_collection_path = blend_rel_path + "/race_car.blend/Collection"
         bpy.ops.wm.append(
             directory=car_collection_path,
@@ -138,8 +137,7 @@ def camera_animation_builder(race_json_path, lap_json_path, race_blend_path, tod
     create_render_list_txt(camera_action_frames, race_blend_path, today)
 
 
-def \
-        add_viz_toggle_keyframes(banner_obj, start_car_intro, end_car_intro):
+def add_viz_toggle_keyframes(banner_obj, start_car_intro, end_car_intro):
     banner_obj.hide_render = False
     banner_obj.keyframe_insert('hide_render', frame=start_car_intro)
     banner_obj.keyframe_insert('hide_render', frame=start_car_intro - 1)
@@ -164,7 +162,7 @@ def scene_setup():
         race_speed = 1
         num_laps = 3
 
-        # setup filepath directories to allow script to run in ide or blender
+    # setup filepath directories to allow script to run in ide or blender
     code_path = deep_racer_utils.get_relative_code_path()
     blender_assets = os.path.join(code_path, "blender_assets")
     car_files = os.path.join(blender_assets, "car_files")
@@ -208,7 +206,7 @@ def scene_setup():
     start_grid_blend_path = os.path.join(bpy.path.abspath(race_blend_path), f"starting_grid_{today}.blend")
     print(f"\nCreate Starting Grid and saving file as: {start_grid_blend_path}")
 
-    num_racers = len(race_json_path)
+    num_racers = len(race_json)
     for racer in race_json:
         i = int(racer['starting_position'])
         iter_string = getIterString(i)

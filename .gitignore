@@ -137,3 +137,6 @@ dmypy.json
 
 # Intellij Project stuff
 .idea
+
+# mac ds_store files
+.DS_Store

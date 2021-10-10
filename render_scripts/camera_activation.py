@@ -29,14 +29,6 @@ def is_coord_in_zone(coord, zone):
            and point_in_range(coord[1], zone['min_y'], zone['max_y'])
 
 
-def convert_markers_to_frames(coord_markers, total_time, total_points):
-    frames_per_sec = 24
-    total_frames = total_time * frames_per_sec
-    frames_per_point = total_frames / total_points
-
-    return [round(coord_index * frames_per_point) for coord_index in coord_markers]
-
-
 def get_coord_markers(idx, coords, lap_time, overall_time, zones, number_of_laps, race_speed):
     tot_points = len(coords)
     total_frames = get_frames_for_time(lap_time, race_speed)

@@ -40,7 +40,7 @@ def convert_markers_to_frames(coord_markers, total_time, total_points):
 def get_coord_markers(idx, coords, lap_time, overall_time, zones, number_of_laps, race_speed):
     tot_points = len(coords)
     total_frames = get_frames_for_time(lap_time, race_speed)
-    start_frame_offset = get_frames_for_time(overall_time, race_speed) - lap_time
+    start_frame_offset = get_frames_for_time(overall_time, race_speed) - total_frames
     frames_per_point = total_frames / tot_points
 
     marker_map = {}

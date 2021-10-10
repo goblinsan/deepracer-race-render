@@ -1,0 +1,16 @@
+- team: almost finished
+  logfile: Baadal_Track_1_hour_2_laps_complete_logs.tar.gz
+  car: 99
+  color: 0x000000
+- team: SpeedRacer
+  logfile: Baadal_Track_1_hour_3_laps_complete_logs.tar.gz
+  car: 77
+  color: 0xe71837
+- team: GhostRiderz
+  logfile: Baadal_Track_2_hour_3_laps_complete_logs.tar.gz
+  car: 55
+  color: 0x9900ff
+- team: no laps complete
+  logfile: Baadal_Track_bad_model_no_complete_laps_logs.tar.gz
+  car: 33
+  color: 0x003399

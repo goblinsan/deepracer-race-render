@@ -1,7 +1,17 @@
-blender_exe: C:\Program Files\Blender Foundation\Blender 2.92\blender.exe
-base_blender_file: base_track-2019.blend
-race_name: e2-trial
-render_out_dir: D:\deepRacer\renders
+# Main settings
+log_path: C:\Users\coghl\Downloads\deep-racer-logs
+blender_exe: C:\Program Files\Blender Foundation\Blender 2.83\blender.exe
+base_blender_file: base_track-baadal.blend
+race_name: major-refactor-baadal
+render_out_dir: C:\Users\coghl\animation\deep-racer
+race_laps: 3
+
+
+
+# Debug settings
 start_render: True
+one_frame_render: False
 bake_crash_fx: True
 assemble_video: True
+race_speed: 1 # Multiply the race speed.  eg. set to 2 for double speed (faster race)
+

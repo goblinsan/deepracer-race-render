@@ -1,18 +1,9 @@
-# deepracer-race-render
-Use blender to render deepracer race evaluations
+# 2021-deepracer-final
 
-## Steps to render a race
-
-#### 1. copy the race cloudwatch logs to data_prep/cloudwatch_logs
-
-#### 2. configure the race teams in data_prep/log_file_map.yml 
-
-#### 3. run the log_collection.py
-
-#### 4. update render_setup.yml with where blender is installed, and where you want the rendered images to go
-
-#### 5. run the run_render.py script
-
-#### 6. use the rendered images to create a video using your favorite video editor
-
-
+Steps to render a race:
+1. Download the race cloudwatch logs to somewhere on your computer
+1. Update render_setup.yml with where blender is installed, and where you want the render video output to go
+1. Configure the race teams in team_setup.yml
+1. Install required python dependencies found in requirements.txt (recommend using venv)
+1. Run the run_render.py script
+1. The process will create a video in the location you declared i  `render_out_dir` in the render_setup.yml

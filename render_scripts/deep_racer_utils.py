@@ -47,3 +47,11 @@ def stop_output_redirect(old):
     os.close(1)
     os.dup(old)
     os.close(old)
+
+
+def getIterString(team_position):
+    iterString = ''
+    if team_position > 0:
+        iterString = "." + str(team_position).zfill(3)
+
+    return iterString

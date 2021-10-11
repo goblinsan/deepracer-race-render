@@ -17,6 +17,7 @@ if script_dir not in sys.path:
 import deep_racer_utils
 import start_grid
 import camera_activation
+import car_path
 
 
 def get_team_data(race_team_entry, race_speed):
@@ -40,34 +41,6 @@ def add_cars_to_scene(blend_rel_path, file_data):
         bpy.ops.wm.append(
             directory=car_collection_path,
             link=False, filename="race_car")
-
-
-def apply_race_data_to_car(file_data, texture_path, race_speed, num_laps, last_frame):
-    for racer in file_data:
-        car_data = get_team_data(racer, race_speed)
-        print("\nRendering race data for " + car_data['team_name'])
-        car_customize.modifyCarAttributes(texture_path, car_data['iterString'], car_data['car_number'],
-                                          car_data['car_color'], car_data['team_name'])
-        curves = []
-        last_coord = []
-        last_lap_end_time = 0
-        for idx, plot_data in enumerate(car_data['plot_file_paths']):
-            coords = car_path.get_race_coords(plot_data)
-            if len(racer['lap_times']) > idx:
-                this_lap = racer['lap_times'][idx]
-            else:
-                this_lap = racer['overall_time'] - last_lap_end_time
-            lap_end_time = this_lap + last_lap_end_time
-
-            curves.append([car_path.generate_path(idx, coords, last_coord, car_data['team_position'], car_data['iterString'],
-                                                  this_lap, race_speed), last_lap_end_time, lap_end_time])
-            last_coord = coords[-1]
-            last_lap_end_time = lap_end_time
-        car_path.assign_car_to_path(curves, car_data['iterString'], race_speed, last_frame)
-
-        if car_data['number_laps_complete'] < int(num_laps):
-            print("  !!! Add explosion to car " + car_data['team_name'])
-            car_explosions.addExplosion(car_data['iterString'], car_data['total_frames'])
 
 
 def parse_args(argv):
@@ -134,17 +107,13 @@ def scene_setup():
     with open(paths.race_json_path) as f:
         race_json = json.load(f)
 
-    add_cars_to_scene(paths.car_files, race_json)
-
     last_frame = get_last_frame_of_race(race_json, args.race_speed)
     bpy.context.scene.frame_end = last_frame
 
-    apply_race_data_to_car(race_json, paths.texture_path, args.race_speed, args.num_laps, last_frame)
-
+    add_cars_to_scene(paths.car_files, race_json)
+    car_path.apply_race_data_to_car(race_json, paths.texture_path, args.race_speed, args.num_laps, last_frame)
     bake_particles(args.bake_crash_fx, args.race_name)
-
     camera_activation.camera_animation_builder(paths.race_json_path, paths.lap_json_path, paths.race_blend_path, args.today, args.race_speed)
-
     save_race_blend(paths.race_blend_path, args.today)
 
     start_grid.create_start_grid_blend(race_json)
@@ -158,9 +127,5 @@ if __name__ == '__main__':
 
     if script_dir not in sys.path:
         sys.path.append(script_dir)
-
-    import car_path
-    import car_customize
-    import car_explosions
 
     scene_setup()

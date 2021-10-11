@@ -3,6 +3,8 @@ import csv
 import bpy
 
 from deep_racer_utils import get_frames_for_time
+from render_race_data import get_team_data
+import car_customize, car_explosions
 
 
 def get_race_coords(csv_filepath):
@@ -103,3 +105,31 @@ def assign_car_to_path(curves, iter_string, race_speed, last_frame):
     explode_color.hide_render = True
     explode_shadow = objects['explode_sprite_shadow' + iter_string]
     explode_shadow.hide_render = True
+
+
+def apply_race_data_to_car(file_data, texture_path, race_speed, num_laps, last_frame):
+    for racer in file_data:
+        car_data = get_team_data(racer, race_speed)
+        print("\nRendering race data for " + car_data['team_name'])
+        car_customize.modifyCarAttributes(texture_path, car_data['iterString'], car_data['car_number'],
+                                          car_data['car_color'], car_data['team_name'])
+        curves = []
+        last_coord = []
+        last_lap_end_time = 0
+        for idx, plot_data in enumerate(car_data['plot_file_paths']):
+            coords = get_race_coords(plot_data)
+            if len(racer['lap_times']) > idx:
+                this_lap = racer['lap_times'][idx]
+            else:
+                this_lap = racer['overall_time'] - last_lap_end_time
+            lap_end_time = this_lap + last_lap_end_time
+
+            curves.append([generate_path(idx, coords, last_coord, car_data['team_position'], car_data['iterString'],
+                                                  this_lap, race_speed), last_lap_end_time, lap_end_time])
+            last_coord = coords[-1]
+            last_lap_end_time = lap_end_time
+        assign_car_to_path(curves, car_data['iterString'], race_speed, last_frame)
+
+        if car_data['number_laps_complete'] < int(num_laps):
+            print("  !!! Add explosion to car " + car_data['team_name'])
+            car_explosions.addExplosion(car_data['iterString'], car_data['total_frames'])

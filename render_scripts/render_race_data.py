@@ -16,6 +16,7 @@ if script_dir not in sys.path:
 
 import deep_racer_utils
 import start_grid
+import camera_activation
 
 
 def get_team_data(race_team_entry, race_speed):
@@ -31,63 +32,6 @@ def get_team_data(race_team_entry, race_speed):
     team_data['overall_time'] = race_team_entry['overall_time']
     team_data['total_frames'] = deep_racer_utils.get_frames_for_time(team_data['overall_time'], race_speed)
     return team_data
-
-
-def create_zone_list():
-    z_list = []
-    for i in range(1, 4):
-        zone_cube = bpy.data.objects[f'activation_bounds_{i}']
-        min_x, max_x, min_y, max_y = get_max_min.get_zone_max_min(zone_cube)
-        z_list.append(camera_activation.create_zone(i, min_x, max_x, min_y, max_y))
-
-    return z_list
-
-
-def setup_camera_animations(race_json_path, lap_json_path, race_speed):
-    race_json = deep_racer_utils.get_json(race_json_path)
-    lap_json = deep_racer_utils.get_json(lap_json_path)
-
-    zone_list = create_zone_list()
-
-    coord_markers = []
-    for idx, lap in enumerate(lap_json['laps']):
-        fastest_car = lap['racers'][0]['name']
-        print(f'Fastest car in lap {lap["lap"]} is {fastest_car}')
-        fastest_team_json = [x for x in race_json if x["team"] == fastest_car][0]
-        fastest_plot = fastest_team_json['plot_data'][idx]
-        best_coords = camera_activation.get_race_coords(fastest_plot)
-        best_time = lap['racers'][0]['lap_time']
-        overall_time = lap['racers'][0]['overall_time']
-        coord_markers.append(
-            camera_activation.get_coord_markers(idx, best_coords, best_time, overall_time, zone_list, len(lap_json),
-                                                race_speed))
-
-    camera_01 = {'name': 'high-starting-line', 'rule': [("exit", 1), ("enter", 2)]}
-    camera_02 = {'name': 'front_chicane', 'rule': [("enter", 2), ("exit", 2)]}
-    camera_03 = {'name': 'back-corner', 'rule': [("exit", 2), ("enter", 3)]}
-    camera_04 = {'name': 'back_chicane', 'rule': [("enter", 3), ("exit", 3)]}
-    camera_05 = {'name': 'last-turn', 'rule': [("exit", 3), ("enter", 1)]}
-    camera_06 = {'name': 'finish-line-tight', 'rule': [("enter", 1), ("exit", 1)]}
-    camera_action_frames = camera_activation.get_camera_action_frames_dic(coord_markers,
-                                                                          [camera_01, camera_02, camera_03, camera_04,
-                                                                           camera_05,
-                                                                           camera_06])
-    last_mapped_frame = camera_action_frames['finish-line-tight'][-1]
-    camera_action_frames['race_clean_up'] = [[last_mapped_frame[-1], last_mapped_frame[-1] + 300]]
-
-    return camera_action_frames
-
-
-def create_render_list_txt(camera_action_frames, race_blend_path, today):
-    with open(os.path.join(race_blend_path, f"render_list_{today}.json"), "w") as text_file:
-        print("{", file=text_file)
-        print(f'  "starting-line-cam": [[0, 40]],', file=text_file)
-        for a in camera_action_frames:
-            if a == 'race_clean_up':
-                print(f'  "{a}": {camera_action_frames[a]}', file=text_file)
-            else:
-                print(f'  "{a}": {camera_action_frames[a]},', file=text_file)
-        print("}", file=text_file)
 
 
 def add_cars_to_scene(blend_rel_path, file_data):
@@ -124,11 +68,6 @@ def apply_race_data_to_car(file_data, texture_path, race_speed, num_laps, last_f
         if car_data['number_laps_complete'] < int(num_laps):
             print("  !!! Add explosion to car " + car_data['team_name'])
             car_explosions.addExplosion(car_data['iterString'], car_data['total_frames'])
-
-
-def camera_animation_builder(race_json_path, lap_json_path, race_blend_path, today, race_speed):
-    camera_action_frames = setup_camera_animations(race_json_path, lap_json_path, race_speed)
-    create_render_list_txt(camera_action_frames, race_blend_path, today)
 
 
 def parse_args(argv):
@@ -204,7 +143,7 @@ def scene_setup():
 
     bake_particles(args.bake_crash_fx, args.race_name)
 
-    camera_animation_builder(paths.race_json_path, paths.lap_json_path, paths.race_blend_path, args.today, args.race_speed)
+    camera_activation.camera_animation_builder(paths.race_json_path, paths.lap_json_path, paths.race_blend_path, args.today, args.race_speed)
 
     save_race_blend(paths.race_blend_path, args.today)
 
@@ -223,7 +162,5 @@ if __name__ == '__main__':
     import car_path
     import car_customize
     import car_explosions
-    import camera_activation
-    import get_max_min
 
     scene_setup()

@@ -140,7 +140,7 @@ def get_trial_coords(eval_log_path, data_path, team_data):
 
 
 def process_sim_trace(data_path, sim_logs, team):
-    df = pd.read_csv(sim_logs, usecols=['episode', 'X', 'Y'])
+    df = pd.read_csv(sim_logs, usecols=['episode', 'X', 'Y'], index_col=False)
     team['plot_data'] = []
     for trial in team['trials_to_render']:
         race_data_file = f"{team['team']}_trial_{trial}.csv".replace(" ", "_").lower()

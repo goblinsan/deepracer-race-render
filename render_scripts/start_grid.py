@@ -1,4 +1,6 @@
 import os
+import re
+
 import bpy
 
 from deep_racer_utils import getIterString
@@ -31,14 +33,10 @@ def remove_race_data(car_base):
         car_base.constraints.remove(c)
 
 
-def add_start_path(car_base, iter_string):
+def add_start_path(car_base, start_curve_slot):
     path_constraint = car_base.constraints.new(type='FOLLOW_PATH')
     path_constraint.use_curve_follow = True
-    if iter_string is '':
-        iter_int = 0
-    else:
-        iter_int = int(iter_string[-1])
-    path_constraint.target = bpy.data.objects[f'racer_{iter_int}_curve']
+    path_constraint.target = bpy.data.objects[f'racer_{start_curve_slot}_curve']
     path_constraint.influence = 100
 
 
@@ -62,7 +60,6 @@ def delete_explosions():
         if obj.name.startswith("explode_sprite_color") or obj.name.startswith("explode_sprite_shadow"):
             bpy.context.object.hide_viewport = False
             obj.select_set(True)
-            bpy.context.active_object.animation_data_clear()
             constraints = obj.constraints
             for c in constraints:
                 obj.constraints.remove(c)
@@ -72,12 +69,12 @@ def delete_explosions():
 def create_start_grid_blend(race_json):
     num_racers = len(race_json)
     for racer in race_json:
-        i = int(racer['starting_position'])
-        iter_string = getIterString(i)
+        start_pos = int(racer['starting_position'])
+        iter_string = getIterString(start_pos)
         car_base = bpy.data.objects[f'car_base{iter_string}']
         remove_race_data(car_base)
-        add_start_path(car_base, iter_string)
-        animate_banner_visibility(i, iter_string, num_racers)
+        add_start_path(car_base, start_pos)
+        animate_banner_visibility(start_pos, iter_string, num_racers)
         delete_explosions()
 
     bpy.data.scenes['Scene'].frame_end = 650

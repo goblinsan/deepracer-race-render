@@ -112,7 +112,7 @@ def apply_race_data_to_car(file_data, texture_path, race_speed, num_laps, last_f
         car_data = get_team_data(racer, race_speed)
         print("\nRendering race data for " + car_data['team_name'])
         car_customize.modifyCarAttributes(texture_path, car_data['iterString'], car_data['car_number'],
-                                          car_data['car_color'], car_data['team_name'])
+                                          car_data['car_color'], car_data['team_name'], car_data['team_city'])
         curves = []
         last_coord = []
         last_lap_end_time = 0

@@ -24,7 +24,7 @@ def get_team_data(race_team_entry, race_speed):
     team_data = {'team_position': int(race_team_entry['starting_position'])}
     team_data['iterString'] = deep_racer_utils.getIterString(team_data['team_position'])
     team_data['team_name'] = race_team_entry['team']
-    # team_data['team_city'] = race_team_entry['city']
+    team_data['team_city'] = race_team_entry['city']
     team_data['car_number'] = race_team_entry['car_no']
     team_data['car_color'] = race_team_entry['car_color']
     team_data['number_laps_complete'] = race_team_entry['number_laps_complete']
@@ -37,7 +37,7 @@ def get_team_data(race_team_entry, race_speed):
 
 def add_cars_to_scene(blend_rel_path, file_data):
     for i in range(len(file_data)):
-        car_collection_path = blend_rel_path + "/race_car.blend/Collection"
+        car_collection_path = blend_rel_path + "/race_car_city.blend/Collection"
         bpy.ops.wm.append(
             directory=car_collection_path,
             link=False, filename="race_car")

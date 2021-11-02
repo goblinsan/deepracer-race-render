@@ -154,6 +154,7 @@ def format_team_data(team_data):
     race_json = []
     for team in team_data:
         race_team_json = {"team": team['team'],
+                          "city": team['city'],
                           "final_position": team['final_position'],
                           "starting_position": team['start_pos'],
                           "number_laps_complete": team["number_laps_complete"],

@@ -9,9 +9,9 @@ race_laps: 3
 
 
 # Debug settings
-start_render: False
+start_render: True
 one_frame_render: False
-bake_crash_fx: False
-assemble_video: False
+bake_crash_fx: True
+assemble_video: True
 race_speed: 1 # Multiply the race speed.  eg. set to 2 for double speed (faster race)
 

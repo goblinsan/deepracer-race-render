@@ -50,7 +50,7 @@ def animate_banner_visibility(i, iter_string, num_racers):
     add_viz_toggle_keyframes(bpy.data.objects['banner_bg_white' + iter_string], start_car_intro, end_car_intro)
     add_viz_toggle_keyframes(bpy.data.objects['banner_number' + iter_string], start_car_intro, end_car_intro)
     add_viz_toggle_keyframes(bpy.data.objects['team_name' + iter_string], start_car_intro, end_car_intro)
-    # add_viz_toggle_keyframes(bpy.data.objects['city_name' + iterString], start_car_intro, end_car_intro)
+    add_viz_toggle_keyframes(bpy.data.objects['city_name' + iter_string], start_car_intro, end_car_intro)
     add_viz_toggle_keyframes(bpy.data.objects['team_name_depth' + iter_string], start_car_intro, end_car_intro)
 
 

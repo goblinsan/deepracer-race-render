@@ -1,55 +1,20 @@
-- team: OptimusPrime
-  city: Mumbai
-  logfile: JPMC-MUM-OptimusPrime.tar.gz
-  car: 1
-  color: 0x000000
-- team: Falkor
-  city: Dallas
-  logfile: JPMC-Dallas-Falkor.tar.gz
-  car: 8
-  color: 0x05DBFC
-- team: RacersOfTheLostArk
-  city: Bournemouth
-  logfile: JPMC-BMTH-RacersOfTheLostArk.tar.gz
-  car: 9
-  color: 0x10C42E
-- team: NightFury
-  city: Delaware
-  logfile: JPMC-Delaware-NightFury.tar.gz
-  car: 18
+- team: Road Runners
+  city: Greenica
+  logfile: DFWDR-Rocketeers-model-1-SUCCESS_LongTime_logs.tar.gz
+  car: 4
   color: 0x131CDF
-- team: JP-SQUAD
-  city: London
-  logfile: JPMC-LDN-JP-SQUAD.tar.gz
-  car: 19
-  color: 0x2407AB
-- team: SEPs-ToThe-Moon
-  city: Dallas
-  logfile: JPMC-Dallas-SEPs-ToThe-Moon.tar.gz
-  car: 26
-  color: 0x2875B8
-- team: DTCMXRacers
-  city: Delaware
-  logfile: JPMC-Delaware-DTCMXRacers.tar.gz
-  car: 27
-  color: 0x333FFF
-- team: Cheetahs
-  city: Delaware
-  logfile: JPMC-Delaware-Cheetahs.tar.gz
-  car: 34
-  color: 0xDC2111
-- team: Velocity
-  city: Jersey City
-  logfile: JPMC-JerseyCity-Velocity.tar.gz
-  car: 35
-  color: 0xFF00DC
-- team: Musketeers
-  city: Glasgow
-  logfile: JPMC-GLA-Musketeers.tar.gz
-  car: 43
-  color: 0x0033FF
-- team: Team2
-  city: Glasgow
-  logfile: JPMC-GLA-Team2.tar.gz
-  car: 44
-  color: 0xFF0000
+- team: Horse Whisperers
+  city: Greenica
+  logfile: DFWDR-Rocketeers-model-3-2SUCCESS_1FAIL_logs.tar.gz
+  car: 15
+  color: 0xC713DF
+#- team: Horse Whisperers
+#  city: Greenica
+#  logfile: DFWDR-Rocketeers-model-7-tSUCCESS_logs.tar.gz
+#  car: 3
+#  color: 0x10C42E
+- team: Angry Birds
+  city: Greenica
+  logfile: DFWDR-Rocketeers-model-8-evaluation_job_i_PARTOAL_logs.tar.gz
+  car: 2
+  color: 0x05DBFC

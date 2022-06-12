@@ -12,7 +12,7 @@ from render_scripts.process_data import process_logs
 
 def build_blend_files():
     subprocess.run([exe_path, "--background", base_blend, "--python", "render_scripts/render_race_data.py",
-                    "--", f'{run_date}', f'{race_name}', f'{bake_crash_fx}', f'{race_speed}', f'{race_laps}'])
+                    "--", f'{run_date}', f'{race_name}', f'{bake_crash_fx}', f'{race_speed}', f'{race_laps}', f'{car_scale}'])
 
 
 if __name__ == '__main__':
@@ -24,6 +24,7 @@ if __name__ == '__main__':
     race_name = setup_yml['race_name']
     render_path = setup_yml['render_out_dir']
     race_laps = setup_yml['race_laps']
+    car_scale = setup_yml['car_scale']
     start_render = setup_yml['start_render']
     one_frame_render = setup_yml['one_frame_render']
     bake_crash_fx = setup_yml['bake_crash_fx']

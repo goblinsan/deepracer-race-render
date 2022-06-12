@@ -35,12 +35,13 @@ def get_team_data(race_team_entry, race_speed):
     return team_data
 
 
-def add_cars_to_scene(blend_rel_path, file_data):
+def add_cars_to_scene(blend_rel_path, file_data, car_scale):
     for i in range(len(file_data)):
         car_collection_path = blend_rel_path + "/race_car_city.blend/Collection"
         bpy.ops.wm.append(
             directory=car_collection_path,
             link=False, filename="race_car")
+        bpy.ops.transform.resize(value=(car_scale, car_scale, car_scale))
 
 
 def parse_args(argv):
@@ -52,12 +53,14 @@ def parse_args(argv):
         parsed_args_dict['bake_crash_fx'] = extra_args[2] == 'True'
         parsed_args_dict['race_speed'] = extra_args[3]
         parsed_args_dict['num_laps'] = extra_args[4]
+        parsed_args_dict['car_scale'] = extra_args[5]
     except ValueError:
         parsed_args_dict['today'] = datetime.date.today()
         parsed_args_dict['race_name'] = "deepRacer-sample"
         parsed_args_dict['bake_crash_fx'] = True
         parsed_args_dict['race_speed'] = 1
         parsed_args_dict['num_laps'] = 3
+        parsed_args_dict['car_scale'] = 1
 
     args_namespace = SimpleNamespace(**parsed_args_dict)
     return args_namespace
@@ -110,7 +113,7 @@ def scene_setup():
     last_frame = get_last_frame_of_race(race_json, args.race_speed)
     bpy.context.scene.frame_end = last_frame
 
-    add_cars_to_scene(paths.car_files, race_json)
+    add_cars_to_scene(paths.car_files, race_json, float(args.car_scale))
     car_path.apply_race_data_to_car(race_json, paths.texture_path, args.race_speed, args.num_laps, last_frame)
     bake_particles(args.bake_crash_fx, args.race_name)
     camera_activation.camera_animation_builder(paths.race_json_path, paths.lap_json_path, paths.race_blend_path, args.today, args.race_speed)

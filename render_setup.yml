@@ -1,11 +1,11 @@
 # Main settings
-log_path: C:\Users\Momito\Documents\deepracer-finals\nov-2\heat-1
+log_path: E:\deep-racer\race-organization\log-downloads\june-22-from-kishore
 blender_exe: C:\Program Files\Blender Foundation\Blender 2.92\blender.exe
-base_blender_file: base_track-baadal.blend
-race_name: 2021-final-heat-1
-render_out_dir: E:\deep-racer\real-2021-final
+base_blender_file: base_track-rogue-circuit.blend
+race_name: 2022-June-11-first-test
+render_out_dir: E:\deep-racer\render-output\rogue-test-2022
 race_laps: 3
-
+car_scale: 3
 
 
 # Debug settings
@@ -13,5 +13,5 @@ start_render: True
 one_frame_render: False
 bake_crash_fx: True
 assemble_video: True
-race_speed: 1 # Multiply the race speed.  eg. set to 2 for double speed (faster race)
+race_speed: 5 # Multiply the race speed.  eg. set to 2 for double speed (faster race)
 

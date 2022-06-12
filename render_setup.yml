@@ -5,7 +5,7 @@ base_blender_file: base_track-rogue-circuit.blend
 race_name: 2022-June-11-first-test
 render_out_dir: E:\deep-racer\render-output\rogue-test-2022
 race_laps: 3
-car_scale: 3
+car_scale: 3 # Rogue Circuit is a larger track - 3x size cars look better on that track.
 
 
 # Debug settings
@@ -13,5 +13,5 @@ start_render: True
 one_frame_render: False
 bake_crash_fx: True
 assemble_video: True
-race_speed: 5 # Multiply the race speed.  eg. set to 2 for double speed (faster race)
+race_speed: 1 # Multiply the race speed.  eg. set to 2 for double speed (faster race)
 

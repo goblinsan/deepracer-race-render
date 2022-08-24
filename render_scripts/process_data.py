@@ -54,11 +54,11 @@ def extract_each_team_log(data_path, eval_log_path, file_to_team_map, race_laps)
 def process_team_metrics(metrics_file, team, number_of_laps):
     metrics_json = json.load(metrics_file)
     sorted_list = sorted(metrics_json["metrics"],
-                         key=lambda k: (-k['completion_percentage'], k["elapsed_time_in_milliseconds"]))
+                         key=lambda k: (k['off_track_count'], k["elapsed_time_in_milliseconds"]))
     for lap in sorted_list[:number_of_laps]:
         team["overall_time"] += lap["elapsed_time_in_milliseconds"]
         team["trials_to_render"].append(lap["trial"])
-        if lap["completion_percentage"] == 100:
+        if lap["off_track_count"] == 0:
             team["number_laps_complete"] += 1
             if team["best_complete_lap_time"] == 0:
                 team["best_complete_lap_time"] = lap["elapsed_time_in_milliseconds"]
@@ -140,12 +140,16 @@ def get_trial_coords(eval_log_path, data_path, team_data):
 
 
 def process_sim_trace(data_path, sim_logs, team):
-    df = pd.read_csv(sim_logs, usecols=['episode', 'X', 'Y'], index_col=False)
+    df = pd.read_csv(sim_logs, usecols=['episode', 'X', 'Y','episode_status','pause_duration'], index_col=False)      
     team['plot_data'] = []
     for trial in team['trials_to_render']:
         race_data_file = f"{team['team']}_trial_{trial}.csv".replace(" ", "_").lower()
         path_for_team_csv = os.path.join(data_path, race_data_file)
-        loc_data = df[(df['episode'] == trial-1)][['X', 'Y']]
+        df2=df[(df['episode'] == trial-1)]
+        df3=df2.loc[:(df2 == 'off_track').any(1).idxmax()]
+        if len(df3)==1:
+            df3=df2
+        loc_data = df3[(df3['episode'] == trial-1)][['X', 'Y']]
         loc_data.to_csv(path_for_team_csv, header=False, index=False)
         team['plot_data'].append(path_for_team_csv)
 

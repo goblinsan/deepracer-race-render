@@ -5,6 +5,7 @@ import bpy
 from deep_racer_utils import get_frames_for_time
 from render_race_data import get_team_data
 import car_customize, car_explosions
+import deep_racer_utils
 
 
 def get_race_coords(csv_filepath):
@@ -121,7 +122,8 @@ def apply_race_data_to_car(file_data, texture_path, race_speed, num_laps, last_f
             if len(racer['lap_times']) > idx:
                 this_lap = racer['lap_times'][idx]
             else:
-                this_lap = racer['overall_time'] - last_lap_end_time
+                this_lap = len(coords)*0.06666
+                racer['overall_time'] = last_lap_end_time + this_lap
             lap_end_time = this_lap + last_lap_end_time
 
             curves.append([generate_path(idx, coords, last_coord, car_data['team_position'], car_data['iterString'],
@@ -132,4 +134,5 @@ def apply_race_data_to_car(file_data, texture_path, race_speed, num_laps, last_f
 
         if car_data['number_laps_complete'] < int(num_laps):
             print("  !!! Add explosion to car " + car_data['team_name'])
+            car_data['total_frames'] = deep_racer_utils.get_frames_for_time(racer['overall_time'], race_speed)
             car_explosions.addExplosion(car_data['iterString'], car_data['total_frames'])

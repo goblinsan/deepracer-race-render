@@ -118,7 +118,7 @@ def scene_setup():
     add_cars_to_scene(paths.car_files, race_json, float(args.car_scale))
     car_path.apply_race_data_to_car(race_json, paths.texture_path, args.race_speed, args.num_laps, last_frame)
     bake_particles(args.bake_crash_fx, args.race_name)
-    camera_activation.camera_animation_builder(args.start_render, paths.race_json_path, paths.lap_json_path, paths.race_blend_path, args.today, args.race_speed)
+    camera_activation.camera_animation_builder(args.start_render, paths.race_json_path, paths.lap_json_path, paths.race_blend_path, args.today, args.race_speed, args.num_laps)
     save_race_blend(paths.race_blend_path, args.today)
 
     start_grid.create_start_grid_blend(race_json)

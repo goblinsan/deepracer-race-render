@@ -66,7 +66,7 @@ def get_coord_markers(idx, coords, lap_time, overall_time, zones, number_of_laps
     return marker_map
 
 
-def get_camera_action_frames_dic(markers, cam_rules):
+def get_camera_action_frames_dic(markers, cam_rules, num_laps):
     camera_actions = {}
     end_frame_padding = 50
 
@@ -74,7 +74,7 @@ def get_camera_action_frames_dic(markers, cam_rules):
         cam_name = cam_rule['name']
         rule = cam_rule['rule']
         lap_frames = []
-        for i in range(0, 3):
+        for i in range(0, int(num_laps)):
             start_frame = markers[i][i + 1][rule[0][1]][rule[0][0]]
             if cam_name == 'finish-line-tight':
                 end_frame = start_frame + 150
@@ -97,7 +97,7 @@ def create_zone_list():
     return z_list
 
 
-def setup_camera_animations(race_json_path, lap_json_path, race_speed):
+def setup_camera_animations(race_json_path, lap_json_path, race_speed, num_laps):
     race_json = deep_racer_utils.get_json(race_json_path)
     lap_json = deep_racer_utils.get_json(lap_json_path)
 
@@ -125,7 +125,7 @@ def setup_camera_animations(race_json_path, lap_json_path, race_speed):
     camera_action_frames = get_camera_action_frames_dic(coord_markers,
                                                                           [camera_01, camera_02, camera_03, camera_04,
                                                                            camera_05,
-                                                                           camera_06])
+                                                                           camera_06], num_laps)
     last_mapped_frame = camera_action_frames['finish-line-tight'][-1]
     camera_action_frames['race_clean_up'] = [[last_mapped_frame[-1], last_mapped_frame[-1] + 300]]
 
@@ -144,7 +144,7 @@ def create_render_list_txt(camera_action_frames, race_blend_path, today):
         print("}", file=text_file)
 
 
-def camera_animation_builder(start_render, race_json_path, lap_json_path, race_blend_path, today, race_speed):
+def camera_animation_builder(start_render, race_json_path, lap_json_path, race_blend_path, today, race_speed, num_laps):
     if start_render:
-        camera_action_frames = setup_camera_animations(race_json_path, lap_json_path, race_speed)
+        camera_action_frames = setup_camera_animations(race_json_path, lap_json_path, race_speed, num_laps)
         create_render_list_txt(camera_action_frames, race_blend_path, today)

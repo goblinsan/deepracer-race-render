@@ -50,13 +50,15 @@ def parse_args(argv):
         extra_args = argv[argv.index("--") + 1:]  # get all args after "--"
         parsed_args_dict['today'] = extra_args[0]
         parsed_args_dict['race_name'] = extra_args[1]
-        parsed_args_dict['bake_crash_fx'] = extra_args[2] == 'True'
-        parsed_args_dict['race_speed'] = extra_args[3]
-        parsed_args_dict['num_laps'] = extra_args[4]
-        parsed_args_dict['car_scale'] = extra_args[5]
+        parsed_args_dict['start_render'] = extra_args[2] == 'True'
+        parsed_args_dict['bake_crash_fx'] = extra_args[3] == 'True'
+        parsed_args_dict['race_speed'] = extra_args[4]
+        parsed_args_dict['num_laps'] = extra_args[5]
+        parsed_args_dict['car_scale'] = extra_args[6]
     except ValueError:
         parsed_args_dict['today'] = datetime.date.today()
         parsed_args_dict['race_name'] = "deepRacer-sample"
+        parsed_args_dict['start_render'] = True
         parsed_args_dict['bake_crash_fx'] = True
         parsed_args_dict['race_speed'] = 1
         parsed_args_dict['num_laps'] = 3
@@ -116,7 +118,7 @@ def scene_setup():
     add_cars_to_scene(paths.car_files, race_json, float(args.car_scale))
     car_path.apply_race_data_to_car(race_json, paths.texture_path, args.race_speed, args.num_laps, last_frame)
     bake_particles(args.bake_crash_fx, args.race_name)
-    camera_activation.camera_animation_builder(paths.race_json_path, paths.lap_json_path, paths.race_blend_path, args.today, args.race_speed)
+    camera_activation.camera_animation_builder(args.start_render, paths.race_json_path, paths.lap_json_path, paths.race_blend_path, args.today, args.race_speed)
     save_race_blend(paths.race_blend_path, args.today)
 
     start_grid.create_start_grid_blend(race_json)

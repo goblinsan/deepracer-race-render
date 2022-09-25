@@ -144,6 +144,7 @@ def create_render_list_txt(camera_action_frames, race_blend_path, today):
         print("}", file=text_file)
 
 
-def camera_animation_builder(race_json_path, lap_json_path, race_blend_path, today, race_speed):
-    camera_action_frames = setup_camera_animations(race_json_path, lap_json_path, race_speed)
-    create_render_list_txt(camera_action_frames, race_blend_path, today)
+def camera_animation_builder(start_render, race_json_path, lap_json_path, race_blend_path, today, race_speed):
+    if start_render:
+        camera_action_frames = setup_camera_animations(race_json_path, lap_json_path, race_speed)
+        create_render_list_txt(camera_action_frames, race_blend_path, today)

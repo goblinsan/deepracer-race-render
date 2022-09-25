@@ -30,7 +30,7 @@ def get_frames_for_time(time, race_speed):
     frame_rate = 24
     if int(race_speed) == 0:
         race_speed = 1
-    return time * (frame_rate / int(race_speed))
+    return int(time * (frame_rate / int(race_speed)))
 
 
 def start_output_redirect(race_name, name):

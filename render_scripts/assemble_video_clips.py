@@ -43,7 +43,13 @@ def setup_race_start(ren_dir):
     adjust_scale_and_duration(frozen_first_frame, 713)
 
     freeze_effect = seqs.new_effect("stop_it", 'SPEED', 6, frame_start=626, frame_end=713, seq1=frozen_first_frame)
-    freeze_effect.multiply_speed = 0
+
+    if (2, 95, 0) > bpy.app.version:
+        print("Apply old speed adjustment method")
+        freeze_effect.multiply_speed = 0
+    else:
+        freeze_effect.speed_control = 'MULTIPLY'
+        freeze_effect.speed_factor = 0
 
     seqs.new_effect("cross_fade", 'CROSS', 7, frame_start=626, frame_end=750, seq1=team_intro, seq2=freeze_effect)
     unfrozen_first_frame = seqs.new_movie("frozen_first_frame", movie_path, 5, 713)

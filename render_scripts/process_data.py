@@ -54,21 +54,24 @@ def extract_each_team_log(data_path, eval_log_path, file_to_team_map, race_laps)
 def process_team_metrics(metrics_file, team, number_of_laps):
     metrics_json = json.load(metrics_file)
     complete_laps = [x for x in metrics_json['metrics'] if x['off_track_count'] == 0]
+    incomplete_laps = [x for x in metrics_json['metrics'] if x['off_track_count'] > 0]
     if len(complete_laps) > 0:
         sorted_list = sorted(complete_laps, key=lambda k: (k["elapsed_time_in_milliseconds"]))
+        if len(incomplete_laps) > 0:
+            sorted_list.append(incomplete_laps[0])
     else:
         sorted_list = sorted(metrics_json["metrics"],
                              key=lambda k: (k["elapsed_time_in_milliseconds"]))
     for lap in sorted_list[:number_of_laps]:
         team["overall_time"] += lap["elapsed_time_in_milliseconds"]
         team["trials_to_render"].append(lap["trial"])
-    if lap["off_track_count"] == 0:
+        if lap["off_track_count"] == 0:
             team["number_laps_complete"] += 1
             if team["best_complete_lap_time"] == 0:
                 team["best_complete_lap_time"] = lap["elapsed_time_in_milliseconds"]
             team["avg_lap_time"] = team["overall_time"] / team["number_laps_complete"]
             team["lap_times"].append(lap["elapsed_time_in_milliseconds"] / 1000)
-
+    
     if team["number_laps_complete"] < (number_of_laps - 1):
         team["trials_to_render"] = team["trials_to_render"][:(team["number_laps_complete"] + 1)]
 

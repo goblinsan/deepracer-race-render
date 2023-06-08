@@ -1,27 +1,30 @@
-- team: Angry Birds
-  city: Pretty Fly
-  logfile: rogue_raceway_1_logs.tar.gz
+- team: SafePay Racers
+  city: Wilmington
+  logfile: DEDR-SafePay-Racer-model-06-evaluation_logs.tar.gz
   car: 1
   color: 0xFF0012
-- team: Horse Whisperers
-  city: Triple Crown
-  logfile: right-evaluation_job_SD7Fm6ReSmSisncUbxaYtQ_logs.tar.gz
+- team: Synergy
+  city: Dover
+  logfile: DEDR-Synergy-Model-11-evaluation_job_yKisBlImRO6u3We355fpWg_logs.tar.gz
   car: 2
   color: 0x1800FF
-- team: Greyhound Racers
-  city: Bucket List
-  logfile: right-evaluation_job_F5C5TedURnm3o00f_PgXyw_logs.tar.gz
-  car: 3
-  color: 0x009101
-- team: Cheetah Chasers
-  city: We See Your Spots
-  logfile: left-evaluation_job_TudihAx2R-e_ODosq6FxZQ_logs.tar.gz
-  car: 4
-  color: 0xD4D000
-- team: Bull Runners
-  city: I See Red
-  logfile: left-evaluation_job_aTmi8LEARJyYoS8_YRYbqA_logs.tar.gz
-  car: 5
-  color: 0xED8B00
-
-
+# - team: Horse Whisperers
+#   city: Triple Crown
+#   logfile: right-evaluation_job_SD7Fm6ReSmSisncUbxaYtQ_logs.tar.gz
+#   car: 2
+#   color: 0x1800FF
+# - team: Greyhound Racers
+#   city: Bucket List
+#   logfile: right-evaluation_job_F5C5TedURnm3o00f_PgXyw_logs.tar.gz
+#   car: 3
+#   color: 0x009101
+# - team: Cheetah Chasers
+#   city: We See Your Spots
+#   logfile: left-evaluation_job_TudihAx2R-e_ODosq6FxZQ_logs.tar.gz
+#   car: 4
+#   color: 0xD4D000
+# - team: Bull Runners
+#   city: I See Red
+#   logfile: left-evaluation_job_aTmi8LEARJyYoS8_YRYbqA_logs.tar.gz
+#   car: 5
+#   color: 0xED8B00

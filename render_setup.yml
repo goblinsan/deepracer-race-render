@@ -1,17 +1,17 @@
 # Main settings
-log_path: E:\deep-racer\race-organization\2022_oct_jpmc_finals\test_runs
-blender_exe: C:\Program Files\Blender Foundation\Blender 3.2\blender.exe
-base_blender_file: base_track-rogue-raceway.blend
+log_path: F:\Development\AWS\Deepracer\Races\2023\Q2\test
+blender_exe: C:\Program Files\Blender Foundation\Blender 3.5\blender.exe
+base_blender_file: base_track.blend
 race_name: 2022-oct-test-2
-render_out_dir: E:\deep-racer\render-output\2022-oct-test
-race_laps: 1
-car_scale: 2 # Rogue Circuit is a larger track - 3x size cars look better on that track.
+render_out_dir: F:\Development\AWS\Deepracer\Races\2023\Q2\output
+race_laps: 3
+car_scale: 1 # Rogue Circuit is a larger track - 3x size cars look better on that track.
 
 
 # Debug settings
 start_render: True
 one_frame_render: False
-bake_crash_fx: True
+bake_crash_fx: False
 assemble_video: True
-race_speed: 8 # Multiply the race speed.  eg. set to 2 for double speed (faster race)
+race_speed: 2 # Multiply the race speed.  eg. set to 2 for double speed (faster race)
 

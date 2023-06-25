@@ -68,7 +68,7 @@ def get_coord_markers(idx, coords, lap_time, overall_time, zones, number_of_laps
 
 def get_camera_action_frames_dic(markers, cam_rules, num_laps):
     camera_actions = {}
-    end_frame_padding = 50
+    end_frame_padding = 1
 
     for cam_rule in cam_rules:
         cam_name = cam_rule['name']
@@ -135,6 +135,7 @@ def setup_camera_animations(race_json_path, lap_json_path, race_speed, num_laps)
 def create_render_list_txt(camera_action_frames, race_blend_path, today):
     with open(os.path.join(race_blend_path, f"render_list_{today}.json"), "w") as text_file:
         print("{", file=text_file)
+        # static first camera for 1 sec
         print(f'  "starting-line-cam": [[0, 40]],', file=text_file)
         for a in camera_action_frames:
             if a == 'race_clean_up':

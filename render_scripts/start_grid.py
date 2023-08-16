@@ -58,6 +58,7 @@ def delete_explosions():
     bpy.ops.object.select_all(action='DESELECT')
     for obj in bpy.context.scene.objects:
         if obj.name.startswith("explode_sprite_color") or obj.name.startswith("explode_sprite_shadow"):
+            # if this line errors - its OK to comment | couldn't replicate the error to fix
             bpy.context.object.hide_viewport = False
             obj.select_set(True)
             constraints = obj.constraints

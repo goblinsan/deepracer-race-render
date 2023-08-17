@@ -27,8 +27,8 @@ def get_render_data(render_list_filepath):
 
 def adjust_scale_and_duration(seq, end_frame):
     seq.frame_final_end = end_frame
-    seq.transform.scale_x = 2
-    seq.transform.scale_y = 2
+    seq.transform.scale_x = 1
+    seq.transform.scale_y = 1
 
 
 def setup_race_start(ren_dir):
@@ -86,8 +86,8 @@ def assemble_clips(ren_list, ren_dir, r_name, r_date):
             new_seq = seqs.new_movie("race_clean_up", image_path, 4, seq_frame_start)
             seq_len = new_seq.frame_final_duration
             final_frame = seq_frame_start + seq_len
-            new_seq.transform.scale_x = 2
-            new_seq.transform.scale_y = 2
+            new_seq.transform.scale_x = 1
+            new_seq.transform.scale_y = 1
 
     bpy.context.scene.frame_end = final_frame
     bpy.data.scenes["Scene"].render.filepath = os.path.join(rendered_movies_path, f'{r_name}.mp4')

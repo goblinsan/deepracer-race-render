@@ -12,7 +12,8 @@ from render_scripts.process_data import process_logs
 
 def build_blend_files():
     subprocess.run([exe_path, "--background", base_blend, "--python", "render_scripts/render_race_data.py",
-                    "--", f'{run_date}', f'{race_name}', f'{start_render}', f'{bake_crash_fx}', f'{race_speed}', f'{race_laps}', f'{car_scale}'])
+                    "--", f'{run_date}', f'{race_name}', f'{start_render}', f'{bake_crash_fx}', f'{race_speed}',
+                    f'{race_laps}', f'{car_scale}'])
 
 
 if __name__ == '__main__':
@@ -45,7 +46,6 @@ if __name__ == '__main__':
     build_blend_files()
     print(f'Track progress in the logs being written in this location: {os.path.abspath(logfile_path)}')
 
-
     if start_render:
         with open(render_list_file_path, "r") as render_list_file:
             render_instructions = json.load(render_list_file)
@@ -55,10 +55,12 @@ if __name__ == '__main__':
         process_args = []
         if one_frame_render:
             print("Rendering 1 frame")
-            process_args = [exe_path, "-b", os.path.join('race_blend_files', race_name, f'starting_grid_{run_date}.blend'), "-o",
+            process_args = [exe_path, "-b",
+                            os.path.join('race_blend_files', race_name, f'starting_grid_{run_date}.blend'), "-o",
                             f'{render_path}/{race_name}/{run_date}/team_intro/', "-e", "1", "-a"]
         else:
-            process_args = [exe_path, "-b", os.path.join('race_blend_files', race_name, f'starting_grid_{run_date}.blend'), "-o",
+            process_args = [exe_path, "-b",
+                            os.path.join('race_blend_files', race_name, f'starting_grid_{run_date}.blend'), "-o",
                             f'{render_path}/{race_name}/{run_date}/team_intro/', "-a"]
 
         with open(logfile, 'w') as fp:
@@ -70,11 +72,13 @@ if __name__ == '__main__':
             if start_render and camera_name != 'last-turn':
                 for frame_set in cam_frames:
                     subprocess.run(
-                        [exe_path, "-b", os.path.join('race_blend_files', race_name, f'race_{run_date}.blend'), "--python",
+                        [exe_path, "-b", os.path.join('race_blend_files', race_name, f'race_{run_date}.blend'),
+                         "--python",
                          "render_scripts/render_instructions.py", "--",
                          f'{render_path}', f'{race_name}', f'{run_date}', f'{camera_name}', f'{frame_set[0]}',
                          f'{frame_set[1]}', f'{logfile_path}', f'{one_frame_render}'])
 
         if assemble_video:
-            subprocess.run([exe_path, "-b", "blender_assets/vid_assemble_base.blend", "--python", "render_scripts/assemble_video_clips.py",
+            subprocess.run([exe_path, "-b", "blender_assets/vid_assemble_base.blend", "--python",
+                            "render_scripts/assemble_video_clips.py",
                             "--", f'{render_list_file_path}', f'{render_path}', f'{race_name}', f'{run_date}'])

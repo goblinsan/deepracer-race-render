@@ -121,8 +121,8 @@ def scene_setup():
     camera_activation.camera_animation_builder(args.start_render, paths.race_json_path, paths.lap_json_path, paths.race_blend_path, args.today, args.race_speed, args.num_laps)
     save_race_blend(paths.race_blend_path, args.today)
 
-    start_grid.create_start_grid_blend(race_json)
-    start_grid.save_start_grid_blend(paths.race_blend_path, args.today)
+    # start_grid.create_start_grid_blend(race_json)
+    # start_grid.save_start_grid_blend(paths.race_blend_path, args.today)
 
 
 if __name__ == '__main__':

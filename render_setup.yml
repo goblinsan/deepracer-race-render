@@ -1,10 +1,10 @@
 # Main settings
-log_path: E:\deep-racer\race-organization\2023_jpmc_global\test_runs
-blender_exe: C:\Program Files\Blender Foundation\Blender 3.2\blender.exe
-base_blender_file: base_track-ace-speedway.blend
-race_name: 2023-track-test-2
-render_out_dir: E:\deep-racer\render-output\2023-track-test-2
-race_laps: 1
+log_path: E:\deep-racer\race-organization\log-downloads\2023-final-example
+blender_exe: C:\Program Files\Blender Foundation\Blender 3.6\blender.exe
+base_blender_file: base_track-ace-super-speedway.blend
+race_name: 2023-final-track-test
+render_out_dir: E:\deep-racer\render-output\2023-final-track-test
+race_laps: 2
 car_scale: 2 # Ace Speedway is a larger track - 3x size cars look better on that track.
 
 
@@ -13,5 +13,5 @@ start_render: True
 one_frame_render: False
 bake_crash_fx: True
 assemble_video: True
-race_speed: 1 # Multiply the race speed.  eg. set to 2 for double speed (faster race)
+race_speed: 10 # Multiply the race speed.  eg. set to 2 for double speed (faster race)
 

@@ -29,7 +29,7 @@ def point_in_range(point, min_val, max_val):
 
 def is_coord_in_zone(coord, zone):
     return point_in_range(coord[0], zone['min_x'], zone['max_x']) \
-           and point_in_range(coord[1], zone['min_y'], zone['max_y'])
+        and point_in_range(coord[1], zone['min_y'], zone['max_y'])
 
 
 def get_coord_markers(idx, coords, lap_time, overall_time, zones, number_of_laps, race_speed):
@@ -104,7 +104,7 @@ def setup_camera_animations(race_json_path, lap_json_path, race_speed, num_laps)
     zone_list = create_zone_list()
 
     coord_markers = []
-    for idx, lap in enumerate(lap_json['laps']):
+    for idx, lap in enumerate(lap_json['laps'][:num_laps]):
         fastest_car = lap['racers'][0]['name']
         print(f'Fastest car in lap {lap["lap"]} is {fastest_car}')
         fastest_team_json = [x for x in race_json if x["team"] == fastest_car][0]
@@ -113,8 +113,7 @@ def setup_camera_animations(race_json_path, lap_json_path, race_speed, num_laps)
         best_time = lap['racers'][0]['lap_time']
         overall_time = lap['racers'][0]['overall_time']
         coord_markers.append(
-            get_coord_markers(idx, best_coords, best_time, overall_time, zone_list, len(lap_json),
-                                                race_speed))
+            get_coord_markers(idx, best_coords, best_time, overall_time, zone_list, len(lap_json), race_speed))
 
     camera_01 = {'name': 'high-starting-line', 'rule': [("exit", 1), ("enter", 2)]}
     camera_02 = {'name': 'front_chicane', 'rule': [("enter", 2), ("exit", 2)]}
@@ -123,9 +122,9 @@ def setup_camera_animations(race_json_path, lap_json_path, race_speed, num_laps)
     camera_05 = {'name': 'last-turn', 'rule': [("exit", 3), ("enter", 1)]}
     camera_06 = {'name': 'finish-line-tight', 'rule': [("enter", 1), ("exit", 1)]}
     camera_action_frames = get_camera_action_frames_dic(coord_markers,
-                                                                          [camera_01, camera_02, camera_03, camera_04,
-                                                                           camera_05,
-                                                                           camera_06], num_laps)
+                                                        [camera_01, camera_02, camera_03, camera_04,
+                                                         camera_05,
+                                                         camera_06], num_laps)
     last_mapped_frame = camera_action_frames['finish-line-tight'][-1]
     camera_action_frames['race_clean_up'] = [[last_mapped_frame[-1], last_mapped_frame[-1] + 300]]
 

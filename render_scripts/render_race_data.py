@@ -118,11 +118,27 @@ def scene_setup():
     add_cars_to_scene(paths.car_files, race_json, float(args.car_scale))
     car_path.apply_race_data_to_car(race_json, paths.texture_path, args.race_speed, args.num_laps, last_frame)
     bake_particles(args.bake_crash_fx, args.race_name)
-    camera_activation.camera_animation_builder(args.start_render, paths.race_json_path, paths.lap_json_path, paths.race_blend_path, args.today, args.race_speed, args.num_laps)
+    laps_to_render = get_laps_with_data(paths.lap_json_path)
+    camera_activation.camera_animation_builder(args.start_render, paths.race_json_path, paths.lap_json_path,
+                                               paths.race_blend_path, args.today, args.race_speed, laps_to_render)
     save_race_blend(paths.race_blend_path, args.today)
 
     start_grid.create_start_grid_blend(race_json)
     start_grid.save_start_grid_blend(paths.race_blend_path, args.today)
+
+
+def get_laps_with_data(lap_json_path):
+    laps_with_data = 0
+    lap_json = deep_racer_utils.get_json(lap_json_path)
+    for lap in lap_json['laps']:
+        lap_data_counter = 0
+        for racer in lap['racers']:
+            if 'lap_time' in racer.keys():
+                lap_data_counter += 1
+        if lap_data_counter > 0:
+            laps_with_data += 1
+
+    return laps_with_data
 
 
 if __name__ == '__main__':

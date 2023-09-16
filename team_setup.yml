@@ -1,8 +1,53 @@
 - team: Angry Birds
   city: Pretty Fly
-  logfile: fakeTeam.tar.gz
+  logfile: DEDR-DEEPCHASERS-EC2-BLF-V3-35-evaluation_job_bv29XBl_Th29OE89ob5gsg_logs.tar.gz
   car: 1
   color: 0xFF0012
+- team: Angry Birds 2
+  city: Pretty Fly
+  logfile: DEDR-Synergy-Ace-Naveen-Model-2-evaluation_job_SyBfzUt4SMaYTbsyvmZHtw_logs.tar.gz
+  car: 2
+  color: 0xFA0D12
+- team: Angry Birds
+  city: Pretty Fly
+  logfile: DEDR-DEEPCHASERS-EC2-BLF-V3-35-evaluation_job_bv29XBl_Th29OE89ob5gsg_logs.tar.gz
+  car: 3
+  color: 0xFF0012
+- team: Angry Birds 2
+  city: Pretty Fly
+  logfile: DEDR-Synergy-Ace-Naveen-Model-2-evaluation_job_SyBfzUt4SMaYTbsyvmZHtw_logs.tar.gz
+  car: 4
+  color: 0xFA0D12
+- team: Angry Birds
+  city: Pretty Fly
+  logfile: DEDR-DEEPCHASERS-EC2-BLF-V3-35-evaluation_job_bv29XBl_Th29OE89ob5gsg_logs.tar.gz
+  car: 5
+  color: 0xFF0012
+- team: Angry Birds 2
+  city: Pretty Fly
+  logfile: DEDR-Synergy-Ace-Naveen-Model-2-evaluation_job_SyBfzUt4SMaYTbsyvmZHtw_logs.tar.gz
+  car: 6
+  color: 0xFA0D12
+- team: Angry Birds
+  city: Pretty Fly
+  logfile: DEDR-DEEPCHASERS-EC2-BLF-V3-35-evaluation_job_bv29XBl_Th29OE89ob5gsg_logs.tar.gz
+  car: 7
+  color: 0xFF0012
+- team: Angry Birds 2
+  city: Pretty Fly
+  logfile: DEDR-Synergy-Ace-Naveen-Model-2-evaluation_job_SyBfzUt4SMaYTbsyvmZHtw_logs.tar.gz
+  car: 8
+  color: 0xFA0D12
+- team: Angry Birds
+  city: Pretty Fly
+  logfile: DEDR-DEEPCHASERS-EC2-BLF-V3-35-evaluation_job_bv29XBl_Th29OE89ob5gsg_logs.tar.gz
+  car: 9
+  color: 0xFF0012
+- team: Angry Birds 2
+  city: Pretty Fly
+  logfile: DEDR-Synergy-Ace-Naveen-Model-2-evaluation_job_SyBfzUt4SMaYTbsyvmZHtw_logs.tar.gz
+  car: 10
+  color: 0xFA0D12
 #- team: Horse Whisperers
 #  city: Triple Crown
 #  logfile: right-evaluation_job_SD7Fm6ReSmSisncUbxaYtQ_logs.tar.gz

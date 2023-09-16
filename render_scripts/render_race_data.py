@@ -4,6 +4,7 @@ import sys
 import datetime
 from os.path import dirname, abspath, join
 from types import SimpleNamespace
+import random
 
 import bpy
 
@@ -36,8 +37,21 @@ def get_team_data(race_team_entry, race_speed):
 
 
 def add_cars_to_scene(blend_rel_path, file_data, car_scale):
+    cars = [
+        'race_car_city.blend',
+        'f1_car_city.blend',
+        'hatchback_car_city.blend',
+        'moster_truck_car_city.blend',
+        'muscle_car_city.blend',
+        'pickup_car_city.blend',
+        'police_sports_car_city.blend',
+        'roadster_car_city.blend',
+        'suv_car_city.blend',
+        'taxi_car_city.blend'
+        ]
+    random.shuffle(cars)
     for i in range(len(file_data)):
-        car_collection_path = blend_rel_path + "/race_car_city.blend/Collection"
+        car_collection_path = blend_rel_path + f"/{cars.pop()}/Collection"
         bpy.ops.wm.append(
             directory=car_collection_path,
             link=False, filename="race_car")

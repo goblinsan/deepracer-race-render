@@ -1,9 +1,9 @@
 # Main settings
-log_path: E:\deep-racer\race-organization\2023_jpmc_global\test_runs
-blender_exe: C:\Program Files\Blender Foundation\Blender 3.2\blender.exe
-base_blender_file: base_track-ace-speedway.blend
-race_name: 2023-track-test-2
-render_out_dir: E:\deep-racer\render-output\2023-track-test-2
+log_path: F:\Development\AWS\Deepracer\Races\2023\Q3\ace
+blender_exe: C:\Program Files\Blender Foundation\Blender 3.5\blender.exe
+base_blender_file: base_track-ace-speedway-de.blend
+race_name: 2023-ace-track-test-09162023
+render_out_dir: F:\Development\AWS\Deepracer\Races\2023\Q3\output
 race_laps: 1
 car_scale: 2 # Ace Speedway is a larger track - 3x size cars look better on that track.
 

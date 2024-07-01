@@ -15,6 +15,7 @@ def build_blend_files():
                     "--", f'{run_date}', f'{race_name}', f'{start_render}', f'{bake_crash_fx}', f'{race_speed}', f'{race_laps}', f'{car_scale}'])
 
 
+
 if __name__ == '__main__':
     with open("render_setup.yml", "r") as file_in:
         setup_yml = yaml.load(file_in, Loader=yaml.FullLoader)

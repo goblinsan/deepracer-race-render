@@ -1,9 +1,9 @@
 # Main settings
-log_path: F:\Development\AWS\Deepracer\Races\2023\Q3\ace
-blender_exe: C:\Program Files\Blender Foundation\Blender 3.5\blender.exe
-base_blender_file: base_track-ace-speedway-de.blend
-race_name: 2023-ace-track-test-09162023
-render_out_dir: F:\Development\AWS\Deepracer\Races\2023\Q3\output
+log_path: C:\Users\peter\Desktop\deepracer_logs
+blender_exe: C:\Program Files\Blender Foundation\Blender 4.2\blender.exe
+base_blender_file: base_track-ross-raceway.blend
+race_name: 2024-August-Race
+render_out_dir: C:\Users\peter\Desktop\BlenderRender Output
 race_laps: 1
 car_scale: 2 # Ace Speedway is a larger track - 3x size cars look better on that track.
 

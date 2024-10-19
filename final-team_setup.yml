@@ -1,0 +1,21 @@
+- team: GreyhoundRacers
+  city: Purpletopia
+  logfile: GreyHound-evaluation_job_7UEwix6pR1G6C1KMuqPZHw_logs.tar.gz
+  car: 1
+  color: 0x000000
+- team: HorseWhisperers
+  city: Purpletopia
+  logfile: Horsewhisperer-evaluation.tar.gz
+  car: 2
+  color: 0x05DBFC
+- team: AngryBirds
+  city: Purpletopia
+  logfile: AngryBirds-2spd-02-evaluation_job_1fKEcPj6Ree7tNmA0TCHwA_logs.tar.gz
+  car: 3
+  color: 0x10C42E
+- team: RoadRunners
+  city: Purpletopia
+  logfile: RoadRunnersBackUp02-evaluation_job_W_7ew0L_RYW4PGs6Brbf8g_logs (1).tar.gz
+  car: 4
+  color: 0x131CDF
+

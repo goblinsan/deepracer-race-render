@@ -1,53 +1,43 @@
-- team: Angry Birds
-  city: Pretty Fly
-  logfile: DEDR-Synergy-Ace-Naveen-Model-rfv3-7-evaluation_job_qbIwynbaS8CC74MbC7BO9A_logs.tar.gz
+- team: Alpha X
+  city: Bournemouth
+  logfile: Akatsuki-Racing-evaluation_job_Zd__Dt_FTeSjRvX6tfA-lg_logs.tar.gz
   car: 1
   color: 0xFF0012
-- team: Angry Birds 2
-  city: Pretty Fly
-  logfile: DEDR-Synergy-Ace-Naveen-Model-rfv3-7-evaluation_job_qbIwynbaS8CC74MbC7BO9A_logs.tar.gz
+- team: Dorset Titans
+  city: Bournemouth
+  logfile: Enemies-Of-Syntax-evaluation_job_KAWphd7jT0WC-jOa8XF71A_logs.tar.gz
   car: 2
-  color: 0xFA0D12
-- team: Angry Birds
-  city: Pretty Fly
-  logfile: DEDR-Synergy-Ace-Naveen-Model-rfv3-7-evaluation_job_qbIwynbaS8CC74MbC7BO9A_logs.tar.gz
+  color: 0x1800FF
+- team: Lightning McDream
+  city: Bournemouth
+  logfile: False-Positives-evaluation_job_-5rVUvD5SeWecXhYHlhUhA_logs.tar.gz
   car: 3
-  color: 0xFF0012
-- team: Angry Birds 2
-  city: Pretty Fly
-  logfile: DEDR-Synergy-Ace-Naveen-Model-rfv3-7-evaluation_job_qbIwynbaS8CC74MbC7BO9A_logs.tar.gz
+  color: 0xD4D000
+- team: Racers Of The Lost Arc
+  city: Bournemouth
+  logfile: Speedy-Baby-Shrimps-evaluation_job_HQ0QQykDTZWROm_lotm4hg_logs.tar.gz
   car: 4
-  color: 0xFA0D12
-- team: Angry Birds
-  city: Pretty Fly
-  logfile: DEDR-Synergy-Ace-Naveen-Model-rfv3-7-evaluation_job_qbIwynbaS8CC74MbC7BO9A_logs.tar.gz
+  color: 0x009101
+- team: Site Leads
+  city: Bournemouth
+  logfile: Tech-Titans-HK-evaluation_job_Y3zcledJQz-w_xxz4dNbxg_logs.tar.gz
   car: 5
-  color: 0xFF0012
-- team: Angry Birds 2
-  city: Pretty Fly
-  logfile: DEDR-Synergy-Ace-Naveen-Model-rfv3-7-evaluation_job_qbIwynbaS8CC74MbC7BO9A_logs.tar.gz
-  car: 6
   color: 0xFA0D12
-- team: Angry Birds
-  city: Pretty Fly
-  logfile: DEDR-Synergy-Ace-Naveen-Model-rfv3-7-evaluation_job_qbIwynbaS8CC74MbC7BO9A_logs.tar.gz
-  car: 7
-  color: 0xFF0012
-- team: Angry Birds 2
-  city: Pretty Fly
-  logfile: DEDR-Synergy-Ace-Naveen-Model-rfv3-7-evaluation_job_qbIwynbaS8CC74MbC7BO9A_logs.tar.gz
-  car: 8
-  color: 0xFA0D12
-- team: Angry Birds
-  city: Pretty Fly
-  logfile: DEDR-Synergy-Ace-Naveen-Model-rfv3-7-evaluation_job_qbIwynbaS8CC74MbC7BO9A_logs.tar.gz
-  car: 9
-  color: 0xFF0012
-- team: Angry Birds 2
-  city: Pretty Fly
-  logfile: DEDR-Synergy-Ace-Naveen-Model-rfv3-7-evaluation_job_qbIwynbaS8CC74MbC7BO9A_logs.tar.gz
-  car: 10
-  color: 0xFA0D12
+#- team: Angry Birds 2
+#  city: Pretty Fly
+#  logfile: DEDR-Synergy-Ace-Naveen-Model-rfv3-7-evaluation_job_qbIwynbaS8CC74MbC7BO9A_logs.tar.gz
+#  car: 8
+#  color: 0xFA0D12
+#- team: Angry Birds
+#  city: Pretty Fly
+#  logfile: DEDR-Synergy-Ace-Naveen-Model-rfv3-7-evaluation_job_qbIwynbaS8CC74MbC7BO9A_logs.tar.gz
+#  car: 9
+#  color: 0xFF0012
+#- team: Angry Birds 2
+#  city: Pretty Fly
+#  logfile: DEDR-Synergy-Ace-Naveen-Model-rfv3-7-evaluation_job_qbIwynbaS8CC74MbC7BO9A_logs.tar.gz
+#  car: 10
+#  color: 0xFA0D12
 #- team: Horse Whisperers
 #  city: Triple Crown
 #  logfile: right-evaluation_job_SD7Fm6ReSmSisncUbxaYtQ_logs.tar.gz

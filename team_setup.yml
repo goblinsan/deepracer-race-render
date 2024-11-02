@@ -1,60 +1,70 @@
-- team: Alpha X
+- team: Team 1
   city: Bournemouth
   logfile: Akatsuki-Racing-evaluation_job_Zd__Dt_FTeSjRvX6tfA-lg_logs.tar.gz
   car: 1
   color: 0xFF0012
-- team: Dorset Titans
+- team: Team 2
   city: Bournemouth
   logfile: Enemies-Of-Syntax-evaluation_job_KAWphd7jT0WC-jOa8XF71A_logs.tar.gz
   car: 2
   color: 0x1800FF
-- team: Lightning McDream
+- team: Team 3
   city: Bournemouth
   logfile: False-Positives-evaluation_job_-5rVUvD5SeWecXhYHlhUhA_logs.tar.gz
   car: 3
   color: 0xD4D000
-- team: Racers Of The Lost Arc
+- team: Team 4
   city: Bournemouth
   logfile: Speedy-Baby-Shrimps-evaluation_job_HQ0QQykDTZWROm_lotm4hg_logs.tar.gz
   car: 4
   color: 0x009101
-- team: Site Leads
+- team: Team 5
   city: Bournemouth
   logfile: Tech-Titans-HK-evaluation_job_Y3zcledJQz-w_xxz4dNbxg_logs.tar.gz
   car: 5
   color: 0xFA0D12
-#- team: Angry Birds 2
-#  city: Pretty Fly
-#  logfile: DEDR-Synergy-Ace-Naveen-Model-rfv3-7-evaluation_job_qbIwynbaS8CC74MbC7BO9A_logs.tar.gz
-#  car: 8
-#  color: 0xFA0D12
-#- team: Angry Birds
-#  city: Pretty Fly
-#  logfile: DEDR-Synergy-Ace-Naveen-Model-rfv3-7-evaluation_job_qbIwynbaS8CC74MbC7BO9A_logs.tar.gz
-#  car: 9
-#  color: 0xFF0012
-#- team: Angry Birds 2
-#  city: Pretty Fly
-#  logfile: DEDR-Synergy-Ace-Naveen-Model-rfv3-7-evaluation_job_qbIwynbaS8CC74MbC7BO9A_logs.tar.gz
-#  car: 10
-#  color: 0xFA0D12
-#- team: Horse Whisperers
-#  city: Triple Crown
-#  logfile: right-evaluation_job_SD7Fm6ReSmSisncUbxaYtQ_logs.tar.gz
-#  car: 2
-#  color: 0x1800FF
-#- team: Greyhound Racers
-#  city: Bucket List
-#  logfile: right-evaluation_job_F5C5TedURnm3o00f_PgXyw_logs.tar.gz
-#  car: 3
-#  color: 0x009101
-#- team: Cheetah Chasers
-#  city: We See Your Spots
-#  logfile: left-evaluation_job_TudihAx2R-e_ODosq6FxZQ_logs.tar.gz
-#  car: 4
-#  color: 0xD4D000
-#- team: Bull Runners
-#  city: I See Red
-#  logfile: left-evaluation_job_aTmi8LEARJyYoS8_YRYbqA_logs.tar.gz
-#  car: 5
-#  color: 0xED8B00
+- team: Team 6
+  city: Bournemouth
+  logfile: Akatsuki-Racing-evaluation_job_Zd__Dt_FTeSjRvX6tfA-lg_logs.tar.gz
+  car: 6
+  color: 0xFF0012
+- team: Team 7
+  city: Bournemouth
+  logfile: Enemies-Of-Syntax-evaluation_job_KAWphd7jT0WC-jOa8XF71A_logs.tar.gz
+  car: 7
+  color: 0x1800FF
+- team: Team 8
+  city: Bournemouth
+  logfile: False-Positives-evaluation_job_-5rVUvD5SeWecXhYHlhUhA_logs.tar.gz
+  car: 8
+  color: 0xD4D000
+- team: Team 9
+  city: Bournemouth
+  logfile: Speedy-Baby-Shrimps-evaluation_job_HQ0QQykDTZWROm_lotm4hg_logs.tar.gz
+  car: 9
+  color: 0x009101
+- team: Team 10
+  city: Bournemouth
+  logfile: Tech-Titans-HK-evaluation_job_Y3zcledJQz-w_xxz4dNbxg_logs.tar.gz
+  car: 10
+  color: 0xFA0D12
+- team: Team 11
+  city: Bournemouth
+  logfile: Enemies-Of-Syntax-evaluation_job_KAWphd7jT0WC-jOa8XF71A_logs.tar.gz
+  car: 11
+  color: 0x1800FF
+- team: Team 12
+  city: Bournemouth
+  logfile: False-Positives-evaluation_job_-5rVUvD5SeWecXhYHlhUhA_logs.tar.gz
+  car: 12
+  color: 0xD4D000
+- team: Team 13
+  city: Bournemouth
+  logfile: Speedy-Baby-Shrimps-evaluation_job_HQ0QQykDTZWROm_lotm4hg_logs.tar.gz
+  car: 13
+  color: 0x009101
+- team: Racers 14 the Lost Arc
+  city: Bournemouth
+  logfile: Tech-Titans-HK-evaluation_job_Y3zcledJQz-w_xxz4dNbxg_logs.tar.gz
+  car: 14
+  color: 0xFA0D12

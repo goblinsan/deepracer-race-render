@@ -2,8 +2,8 @@
 log_path: E:\deep-racer\race-organization\log-downloads\global-final-2024\track-creation
 blender_exe: C:\Program Files\Blender Foundation\Blender 4.0\blender.exe
 base_blender_file: base_track-ross-super-speedway.blend
-race_name: 2024-final-setup
-render_out_dir: E:\deep-racer\render-output\2024-ross-super-speedway-test
+race_name: 2024-final-setup-debug
+render_out_dir: E:\deep-racer\render-output\2024-ross-super-speedway-test-debug
 race_laps: 3
 car_scale: 2 # Ace Speedway is a larger track - 3x size cars look better on that track.
 
@@ -11,6 +11,7 @@ car_scale: 2 # Ace Speedway is a larger track - 3x size cars look better on that
 # Debug settings
 start_render: True
 one_frame_render: False
+render_race_intro: True # accepts True, False, or Only (renders the intro without the race or video composition)
 bake_crash_fx: True
 assemble_video: True
 race_speed: 2 # Multiply the race speed.  eg. set to 2 for double speed (faster race)

@@ -153,7 +153,7 @@ def process_sim_trace(data_path, sim_logs, team):
         race_data_file = f"{team['team']}_trial_{trial}.csv".replace(" ", "_").lower()
         path_for_team_csv = os.path.join(data_path, race_data_file)
         df2=df[(df['episode'] == trial-1)]
-        df3=df2.loc[:(df2 == 'off_track').any(1).idxmax()]
+        df3=df2.loc[:(df2 == 'off_track').any(axis=1).idxmax()]
         if len(df3)==1:
             df3=df2
         loc_data = df3[(df3['episode'] == trial-1)][['X', 'Y']]

@@ -77,7 +77,10 @@ def get_camera_action_frames_dic(markers, cam_rules, num_laps):
         for i in range(0, int(num_laps)):
             start_frame = markers[i][i + 1][rule[0][1]][rule[0][0]]
             if cam_name == 'finish-line-tight':
-                end_frame = start_frame + 150
+                if i == int(num_laps)-1:
+                    end_frame = start_frame + 150
+                else:
+                    end_frame = start_frame + 30
             else:
                 end_frame = markers[i][i + 1][rule[1][1]][rule[1][0]]
             end_frame = end_frame + end_frame_padding
